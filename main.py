@@ -41,11 +41,22 @@ for i in texts:
                             text = ''
                             flag1 = 0                    
 file2.close()
+class Post(object):
+    def setTitle(self,title):
+        self.title = title
+    def setUrl(self,url):
+        self.url = url
+    def setOutline(self,outline):
+        self.outline = outline
+posts = []
 text = ''
 flag = 0
+k = -1
 file = open('result.txt','r')
 file1 = open("result.md",'w')
 for i in file.readlines():
+    k += 1
+    posts.append(Post())
     for j in i:
         if(j != ' '):
             text += j
@@ -66,6 +77,7 @@ for i in file.readlines():
                 flag = 4
                 text = text.replace("'","",1)
                 print("https://jwc.sspu.edu.cn" + text)
+                posts[k].setUrl("https://jwc.sspu.edu.cn" + text)
                 print('------------------')
                 text = ''
         if(flag == 4):
@@ -86,9 +98,38 @@ for i in file.readlines():
                 flag = 8
                 text = text.replace("'","",1)
                 print(text)
+                posts[k].setTitle(text)
                 print('------------------')
                 text = ''
         if(flag == 8):
             flag = 0
             break
-        
+# get the outline of the post
+"""
+for i in posts:
+    url = i.url
+    res=urllib.request.urlopen(url)
+    htmlBytes=res.read()
+    filr = open('baidu.html','wb')
+    filr.write(htmlBytes)
+    filr.close()
+    filr = open('baidu.html','rb')
+    filr.close()
+    file = open('baidu.html','rb')
+    texts = file.readlines()
+    file.close()
+    text = ''
+    flag = 0
+    flag1 = 0
+"""
+# save to md
+for i in posts:
+    file1.write("[")
+    file1.write(i.title)
+    file1.write("](")
+    file1.write(i.url)
+    file1.write(")")
+    file1.write('{target="_blank"}')
+    file1.write('\n')
+    file1.write('\n')
+file1.close()
