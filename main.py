@@ -2,22 +2,34 @@ import io
 import requests
 import os
 import sys
+import time
 import urllib.request
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 res=urllib.request.urlopen('https://jwc.sspu.edu.cn/897/list.htm')
 htmlBytes=res.read()
-filr = open('baidu.html','wb')
+filr = open('website.html','wb')
 filr.write(htmlBytes)
 filr.close()
-filr = open('baidu.html','rb')
+filr = open('website.html','rb')
 filr.close()
-file = open('baidu.html','rb')
+file = open('website.html','rb')
 file2 = open('result.txt','w')
 texts = file.readlines()
 file.close()
 text = ''
 flag = 0
 flag1 = 0
+import unicodedata
+def is_word_which_i_need(chars):
+    for i in chars:
+        if '\u4e00' <= i <= '\u9fff':
+            return True
+        elif '0' <= i <= '9':
+            return True
+        elif '-' == i:
+            return True
+        else:
+            return False
 for i in texts:
     if('<ul class="news_list list2">' in i.decode("utf8") and flag == 0):
         flag = 1
@@ -105,23 +117,56 @@ for i in file.readlines():
             flag = 0
             break
 # get the outline of the post
-"""
-for i in posts:
-    url = i.url
+count = 0
+for g in posts:
+    url = g.url
     res=urllib.request.urlopen(url)
     htmlBytes=res.read()
-    filr = open('baidu.html','wb')
+    filr = open('website.html','wb')
     filr.write(htmlBytes)
     filr.close()
-    filr = open('baidu.html','rb')
+    filr = open('website.html','rb')
     filr.close()
-    file = open('baidu.html','rb')
+    file = open('website.html','rb')
     texts = file.readlines()
     file.close()
     text = ''
     flag = 0
     flag1 = 0
-"""
+    # add up j to text, if the text == '<div class="article" frag="窗口3" portletmode="simpleArticleAttri">'
+    # then flag = 1, if flag == 1, add up j to text, if j == '<' and flag1 == 0, then flag1 = 1, if flag1 == 1, add up j to text
+    # if j == '>' and flag1 == 1, then flag1 = 0, if flag1 == 0 and flag == 1, then text = '', flag = 0, break
+    result = ''
+    post1 = []
+    doNotRecord = -1
+    for j in texts:
+        for k in j.decode("utf8"):
+            if(k != ' '):
+                text += k
+            if('<p class="arti_metas">' in text):
+                flag = 1
+                text = ''
+            if(k == '<'):
+                if(not doNotRecord):
+                     if('</span>' in text and not doNotRecord):
+                        for a in text:
+                            if(is_word_which_i_need(a)):
+                                result += a
+                                if(result == '宋体'):
+                                    result = ""
+                        post1.append(result)
+                        text = ''
+                        result = ''
+                else:
+                    doNotRecord = 1
+            elif(k == '>'):
+                doNotRecord = 0
+                if(not is_word_which_i_need(text)):
+                    text = ''
+    posts[count].setOutline(post1[0])
+    count += 1
+    
+           
 # save to md
 for i in posts:
     file1.write("[")
@@ -129,7 +174,8 @@ for i in posts:
     file1.write("](")
     file1.write(i.url)
     file1.write(")")
-    file1.write('{target="_blank"}')
+    file1.write('\n')
+    file1.write(i.outline[:200])
     file1.write('\n')
     file1.write('\n')
 file1.close()
