@@ -90,7 +90,6 @@ for i in file.readlines():
                 text = text.replace("'","",1)
                 print("https://jwc.sspu.edu.cn" + text)
                 posts[k].setUrl("https://jwc.sspu.edu.cn" + text)
-                print('------------------')
                 text = ''
         if(flag == 4):
             if("target='_blank'" == text):
@@ -236,7 +235,6 @@ for i in file.readlines():
                 text = text.replace('"',"",1)
                 print("https://pe2016.sspu.edu.cn" + text)
                 posts[k].setUrl("https://pe2016.sspu.edu.cn" + text)
-                print('------------------')
                 text = ''
         if(flag == 4):
             if('target="_blank"' in text):
