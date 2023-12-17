@@ -163,7 +163,8 @@ for g in posts:
     posts[count].setOutline(post1[0])
     count += 1
 count -= 1
-res=urllib.request.urlopen('https://jwc.sspu.edu.cn/897/list.htm')
+lastpart = count
+res=urllib.request.urlopen('https://pe2016.sspu.edu.cn/342/list.htm')
 htmlBytes=res.read()
 filr = open('website.html','wb')
 filr.write(htmlBytes)
@@ -178,22 +179,22 @@ text = ''
 flag = 0
 flag1 = 0
 for i in texts:
-    if('<ul class="news_list list2">' in i.decode("utf8") and flag == 0):
+    if('<div class="dht_blank1"></div>' in i.decode("utf8") and flag == 0):
         flag = 1
         print("find")
     if(flag == 1):
-        if('<span class="news_title">' in i.decode("utf8")):
+        if('<li>' in i.decode("utf8")):
             for j in i.decode("utf8"):
                 if(j != '\t' and flag1 == 0):
                     text += j
-                if('<span class="news_title">' in text and flag1 == 0):
+                if('<li>' in text and flag1 == 0):
                     text = ''
                     j = ''
                     flag1 = 1
                 if(flag1 == 1):
                     if(j != '\n' and j != '\t'):
                         text += j
-                        if('</span>' in text):
+                        if('</li>' in text):
                             #print(text)
                             file2.write(text)
                             file2.write('\n')
@@ -211,50 +212,49 @@ text = ''
 flag = 0
 file = open('result.txt','r')
 file1 = open("result.md",'w')
-file1.write("## 教务处通知\n")
 for i in file.readlines():
     k += 1
     posts.append(Post())
     for j in i:
         if(j != ' '):
             text += j
-        if('<a' == text):
+        if('<a' in text):
             flag = 1
             text = ''
         if(flag == 1):
-            if('href=' == text):
+            if('href=' in text):
                 text = ''
                 flag = 2
         if(flag == 2):
-            if(j == "'"):
+            if(j == '"'):
                 flag = 3
                 text = ''
                 continue
         if(flag == 3):
-            if(j == "'"):
+            if(j == '"'):
                 flag = 4
-                text = text.replace("'","",1)
-                print("https://jwc.sspu.edu.cn" + text)
-                posts[k].setUrl("https://jwc.sspu.edu.cn" + text)
+                text = text.replace('"',"",1)
+                print("https://pe2016.sspu.edu.cn" + text)
+                posts[k].setUrl("https://pe2016.sspu.edu.cn" + text)
                 print('------------------')
                 text = ''
         if(flag == 4):
-            if("target='_blank'" == text):
+            if('target="_blank"' in text):
                 text = ''
                 flag = 5
         if(flag == 5):
-            if('title=' == text):
+            if('title=' in text):
                 text = ''
                 flag = 6
-        if(flag == 6):
-            if(j == "'"):
+        if(flag == 6):  
+            if(j == '"'):
                 flag = 7
                 text = ''
                 continue
         if(flag == 7):
-            if(j == "'"):
+            if(j == '"'):
                 flag = 8
-                text = text.replace("'","",1)
+                text = text.replace('"',"",1)
                 print(text)
                 posts[k].setTitle(text)
                 print('------------------')
@@ -263,9 +263,14 @@ for i in file.readlines():
             flag = 0
             break
 # get the outline of the post
-for g in posts:
+for g in posts[lastpart:]:
     url = g.url
-    res=urllib.request.urlopen(url)
+    if(not (".doc" in url or ".xls" in url)):
+        res=urllib.request.urlopen(url)
+    else:
+        posts[count].setOutline("该文件为doc或者xls文件，无法获取概要")
+        count += 1
+        continue
     htmlBytes=res.read()
     filr = open('website.html','wb')
     filr.write(htmlBytes)
@@ -282,29 +287,32 @@ for g in posts:
     post1 = []
     doNotRecord = -1
     for j in texts:
-        for k in j.decode("utf8"):
-            if(k != ' '):
-                text += k
-            if('<p class="arti_metas">' in text):
-                flag = 1
-                text = ''
-            if(k == '<'):
-                if(not doNotRecord):
-                     if('</span>' in text and not doNotRecord):
-                        for a in text:
-                            if(is_word_which_i_need(a)):
-                                result += a
-                                if(result == '宋体'):
-                                    result = ""
-                        post1.append(result)
-                        text = ''
-                        result = ''
-                else:
-                    doNotRecord = 1
-            elif(k == '>'):
-                doNotRecord = 0
-                if(not is_word_which_i_need(text)):
+        try:
+            for k in j.decode("utf8"):
+                if(k != ' '):
+                    text += k
+                if('<p align="left">' in text):
+                    flag = 1
                     text = ''
+                if(k == '<'):
+                    if(not doNotRecord):
+                        if('</span>' in text and not doNotRecord):
+                            for a in text:
+                                if(is_word_which_i_need(a)):
+                                    result += a
+                                    if(result == '宋体'):
+                                        result = ""
+                            post1.append(result)
+                            text = ''
+                            result = ''
+                    else:
+                        doNotRecord = 1
+                elif(k == '>'):
+                    doNotRecord = 0
+                    if(not is_word_which_i_need(text)):
+                        text = ''
+        except UnicodeDecodeError:
+            continue
     posts[count].setOutline(post1[0])
     count += 1
     if(count == len(posts)):
@@ -344,19 +352,23 @@ finally:
         file2.write('\n')
         file2.write(i.url)
         file2.write('\n')
-        file2.write(i.outline)
+        try:
+            file2.write(i.outline)
+        except AttributeError:
+            file2.write("老兄，抱歉了！我无法写入概要，可能程序出现错误了:(")
         file2.write('\n')
     file2.close()
 # save to md
 have = 0
-for i in posts:
+file1.write("## 教务处通知\n")
+for i in posts[:lastpart]:
     if(i.title+'\n' in log):
         continue
     file1.write("[")
     file1.write(i.title)
     file1.write("](")
     file1.write(i.url)
-    file1.write(")")
+    file1.write(")  ")
     file1.write('\n')
     file1.write(i.outline[:200])
     file1.write('\n')
@@ -364,4 +376,21 @@ for i in posts:
     have = 1
 if(not have):
     file1.write("老兄，截止到现在，教务处没有发布新的通知，你可以通过搜索栏查看往期通知\n")
+have = 0
+file1.write("## 体育部通知\n")
+for i in posts[lastpart:]:
+    if(i.title+'\n' in log):
+        continue
+    file1.write("[")
+    file1.write(i.title)
+    file1.write("](")
+    file1.write(i.url)
+    file1.write(")  ")
+    file1.write('\n')
+    file1.write(i.outline[:200])
+    file1.write('\n')
+    file1.write('\n')
+    have = 1
+if(not have):
+    file1.write("老兄，截止到现在，体育部没有发布新的通知，你可以通过搜索栏查看往期通知\n")
 file1.close()
