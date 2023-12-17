@@ -359,7 +359,7 @@ finally:
 # save to md
 have = 0
 file1.write("## 教务处通知\n")
-for i in posts[:lastpart]:
+for i in posts[:lastpart+1]:
     if(i.title+'\n' in log):
         continue
     file1.write("[")
@@ -376,7 +376,7 @@ if(not have):
     file1.write("老兄，截止到现在，教务处没有发布新的通知，你可以通过搜索栏查看往期通知\n")
 have = 0
 file1.write("## 体育部通知\n")
-for i in posts[lastpart:]:
+for i in posts[lastpart+1:]:
     if(i.title+'\n' in log):
         continue
     file1.write("[")
