@@ -211,6 +211,7 @@ text = ''
 flag = 0
 file = open('result.txt','r')
 file1 = open("result.md",'w')
+file1.write("## 教务处通知\n")
 for i in file.readlines():
     k += 1
     posts.append(Post())
@@ -317,7 +318,7 @@ class PostGot(object):
         self.outline = outline
 postsGot = []
 try:
-    file2 = open("got.log",'r')
+    file2 = open("releaseedPost.log",'r')
     log = file2.readlines()
     c = 1
     for i in log:
@@ -333,11 +334,11 @@ try:
             c = 1
     file2.close()
 except FileNotFoundError:
-    file2 = open("got.log",'w')
+    file2 = open("releaseedPost.log",'w')
     log = []
     file2.close()
 finally:
-    file2 = open("got.log",'w')
+    file2 = open("releaseedPost.log",'w')
     for i in posts:
         file2.write(i.title)
         file2.write('\n')
@@ -362,6 +363,5 @@ for i in posts:
     file1.write('\n')
     have = 1
 if(not have):
-    file1.write("## 教务处通知\n")
-    file1.write("老兄，截止到现在，教务处没有新的通知，你可以通过搜索栏查看往期通知\n")
+    file1.write("老兄，截止到现在，教务处没有发布新的通知，你可以通过搜索栏查看往期通知\n")
 file1.close()
