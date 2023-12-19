@@ -371,10 +371,6 @@ for i in posts[:lastpart+1]:
     file1.write(i.outline[:200])
     file1.write('\n')
     file1.write('\n')
-    have = 1
-if(not have):
-    file1.write("老兄，截止到现在，教务处没有发布新的通知，你可以通过搜索栏查看往期通知\n")
-have = 0
 file1.write("## 体育部通知\n")
 for i in posts[lastpart+1:]:
     if(i.title+'\n' in log):
@@ -388,7 +384,4 @@ for i in posts[lastpart+1:]:
     file1.write(i.outline[:200])
     file1.write('\n')
     file1.write('\n')
-    have = 1
-if(not have):
-    file1.write("老兄，截止到现在，体育部没有发布新的通知，你可以通过搜索栏查看往期通知\n")
 file1.close()

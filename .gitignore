@@ -11,3 +11,7 @@ releaseedPost.log
 test_main.py
 .vscode/settings.json
 __pycache__
+publish.py
+src/settings.py
+forumCookies.txt
+2.text
