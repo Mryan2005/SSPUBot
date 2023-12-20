@@ -22,9 +22,6 @@ jobs:
             - name: Add conda to system path
               run: |
                 yum install gtk3
-                wget http://releases.mozilla.org/pub/firefox/releases/116.0.3/linux-x86_64/zh-CN/firefox-116.0.3.tar.bz2
-                tar jxpvf firefox-116.0.3.tar.bz2
-                ln -s /root/firefox/firefox /usr/bin/firefox
                 apt-get install Xvfb
             - name: Install dependencies
               run: |
