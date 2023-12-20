@@ -25,3 +25,6 @@ jobs:
                 pip install EasyProcess
                 pip install xvfbwrapper
                 pip install pyvirtualdisplay
+            - name: run
+              run: |
+                release.py ${GITHUB.TESTURL} $(GITHUB.TESTUSERNAME) ${GITHUB.TESTPASSWORD}
