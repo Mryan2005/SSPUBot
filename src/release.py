@@ -1,4 +1,5 @@
 import platform
+from re import U
 from selenium import webdriver
 import time
 import sys
@@ -20,7 +21,7 @@ def release(Url, Username, Password, title, content):
         ser.path = './geckodriver'
     # 连接Edge浏览器
     firefox_options = Options()
-    firefox_options.add_argument("-headless")
+    #firefox_options.add_argument("-headless")
     driver = webdriver.Firefox(options=firefox_options, service=ser)
     driver.get(Url)
     loginTag = driver.find_element(By.CLASS_NAME, "item-logIn")
@@ -41,7 +42,10 @@ def release(Url, Username, Password, title, content):
     releaseTag = driver.find_element(By.XPATH, "//button[@class=\"Button Button--primary hasIcon\"]")
     releaseTag.click()
     time.sleep(60)
-    primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bug\"]")
+    if(Url == "https://forum.akiacg.com"):
+        primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bug\"]")
+    elif(Url == "https://akiacgdx.flarum.cloud"):
+        primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bullhorn\"]")
     primaryTag.click()
     suubmitTag = driver.find_element(By.XPATH, "//div[@class=\"TagSelectionModal-form-submit App-primaryControl\"]")
     suubmitTag.click()
