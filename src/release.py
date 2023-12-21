@@ -4,7 +4,7 @@ import sys
 if(sys.argv[1] != "test"):
     import settings
 # 读取配置文件
-user = settings.user
+    user = settings.user
 # import Edge的Service
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
