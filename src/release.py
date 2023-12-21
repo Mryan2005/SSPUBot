@@ -33,11 +33,11 @@ def release(Url, Username, Password, title, content):
     loginTag = driver.find_element(By.XPATH, "//button[@type='submit']")
     loginTag.click()
     driver.get(Url)
-    time.sleep(60)
+    time.sleep(10)
     if(Url == "https://forum.akiacg.com"):
         releaseTag = driver.find_element(By.XPATH, "//button[@class=\"Button Button--primary IndexPage-newDiscussion hasIcon\"]")
     elif(Url == "https://akiacgdx.flarum.cloud"):
-        releaseTag = driver.find_element(By.XPATH, "//li[@class=\"item-newDiscussion App-primaryControl\"]")
+        releaseTag = driver.find_element(By.XPATH, "//button[@itemclassname=\"App-primaryControl\"]")
     releaseTag.click()
     inputTag = driver.find_element(By.XPATH, "//input[@placeholder=\"标题\"]")
     inputTag.send_keys(title)
