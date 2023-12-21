@@ -19,7 +19,7 @@ def release(Url, Username, Password, title, content):
     ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
     # 连接Edge浏览器
     firefox_options = Options()
-    firefox_options.headless = True
+    firefox_options.add_argument("-headless")
     driver = webdriver.Firefox(options=firefox_options, service=ser)
     driver.get(Url)
     loginTag = driver.find_element(By.CLASS_NAME, "item-logIn")
@@ -46,4 +46,4 @@ def release(Url, Username, Password, title, content):
     suubmitTag.click()
     driver.close()
 if __name__ == "__main__":  
-    release(sys.argv[1], sys.argv[2], sys.argv[3], "test", "test")
+    release(user["url"], user["username"], user["password"], "test", "test")
