@@ -1,6 +1,8 @@
 from selenium import webdriver
 import time
-import settings
+import sys
+if(sys.argv[1] != "test"):
+    import settings
 # 读取配置文件
 user = settings.user
 # import Edge的Service
@@ -10,7 +12,7 @@ from selenium.webdriver.firefox.service import Service
 from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
 import json
-import sys
+
 import requests
 def release(Url, Username, Password, title, content):
     #display = Display(visible=0, size=(1280, 768))
@@ -46,4 +48,4 @@ def release(Url, Username, Password, title, content):
     suubmitTag.click()
     driver.close()
 if __name__ == "__main__":  
-    release(user["url"], user["username"], user["password"], "test", "test")
+    release(sys.argv[2], sys.argv[3], sys.argv[4], "test", "test")

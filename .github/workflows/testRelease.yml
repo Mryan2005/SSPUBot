@@ -29,4 +29,4 @@ jobs:
               run: |
                 cd src/
                 chmod 755 ./release.py
-                ./release.py
+                ./release.py test "https://akiacgdx.flarum.cloud" ${{ secrets.TESTUSERNAME}} ${{ secrets.TESTPASSWORD}}
