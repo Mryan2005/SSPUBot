@@ -1,7 +1,7 @@
 from selenium import webdriver
 import time
 import sys
-if(sys.argv[1] != "test"):
+if(sys.argv[2] != "test"):
     import settings
 # 读取配置文件
     user = settings.user
@@ -48,4 +48,4 @@ def release(Url, Username, Password, title, content):
     suubmitTag.click()
     driver.close()
 if __name__ == "__main__":  
-    release(sys.argv[2], sys.argv[3], sys.argv[4], "test", "test")
+    release(sys.argv[3], sys.argv[4], sys.argv[5], "test", "test")
