@@ -28,4 +28,4 @@ jobs:
             - name: run
               run: |
                 cd src/
-                release.py ${{secrets.TESTURL}} ${{secrets.TESTUSERNAME}} ${{secrets.TESTPASSWORD}}
+                ./release.py ${{secrets.TESTURL}} ${{secrets.TESTUSERNAME}} ${{secrets.TESTPASSWORD}}
