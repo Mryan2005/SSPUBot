@@ -27,4 +27,6 @@ jobs:
                 pip install pyvirtualdisplay
             - name: run
               run: |
-                release.py ${GITHUB.TESTURL} $(GITHUB.TESTUSERNAME) ${GITHUB.TESTPASSWORD}
+                cd src/
+                chmod 755 ./release.py
+                ./release.py ${{secrets.TESTURL}} ${{secrets.TESTUSERNAME}} ${{secrets.TESTPASSWORD}}
