@@ -30,9 +30,7 @@ jobs:
                 wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
                 cd src/
                 tar -xvzf geckodriver-v0.33.0-linux64.tar.gz
-                
             - name: run
               run: |
-                cd src/
                 chmod 755 ./release.py
                 python ./release.py "https://akiacgdx.flarum.cloud" ${{ secrets.TESTUSERNAME}} ${{ secrets.TESTPASSWORD}}
