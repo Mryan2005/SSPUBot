@@ -1,3 +1,4 @@
+import platform
 from selenium import webdriver
 import time
 import sys
@@ -13,7 +14,10 @@ def release(Url, Username, Password, title, content):
     #display = Display(visible=0, size=(1280, 768))
     #display.start()
     ser = Service()
-    ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
+    if(platform.system() == "Windows"):
+        ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
+    elif(platform.system() == "Linux"):
+        ser.path = './geckodriver-v0.33.0-linux64/geckodriver'
     # 连接Edge浏览器
     firefox_options = Options()
     firefox_options.add_argument("-headless")
