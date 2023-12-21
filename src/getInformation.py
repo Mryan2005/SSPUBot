@@ -1,6 +1,8 @@
 
-from re import U
-from selenium import webdriver
+import json
+import pickle
+from re import U, search
+from seleniumwire import webdriver
 import selenium.common.exceptions
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -269,30 +271,95 @@ def get():
         file3.write(o.outline+"……")
         file3.write("\n\n")
     file3.close()
+    driver.get("https://mp.weixin.qq.com")
     try:
-        file4 = open("./cookie.txt","r")
-        cookie = file4.read()
-        driver.add_cookie(cookie)
-        driver.get("https://mp.weixin.qq.com")
+        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
+        for cookie in cookies: 
+            if isinstance(cookie.get('expiry'), float):
+                cookie['expiry'] = int(cookie['expiry'])
+            
+            driver.add_cookie(cookie)
     except FileNotFoundError:
-        file4 = open("./cookie.txt","w")
-        driver.get("https://mp.weixin.qq.com")
-    LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    LoginTag.click()
-    UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
-    UserNameTag.send_keys(settings["weixinUsername"])
-    PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
-    PasswordTag.send_keys(settings["weixinPassword"])
-    LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
-    LoginTag.click()
-    try:
-        QRcode = driver.find_element(By.XPATH, "//img[@class=\"weui-desktop-qrcheck__img js_qrcode\"]")
+        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    
+        LoginTag.click()
+        UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
+        UserNameTag.send_keys(settings["weixinUsername"])
+        PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
+        PasswordTag.send_keys(settings["weixinPassword"])
+        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
+        LoginTag.click()
         time.sleep(60)
-    except selenium.common.exceptions.NoSuchElementException:
-        pass
-    cookie = driver.get_cookies()
-    cookie = str(cookie)
-    file4.write(cookie)
-    file4.close()
+        cookie = driver.get_cookies()
+        pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
+    finally:
+        driver.refresh()
+        try:
+            url = ''
+            writeafile = driver.find_elements(By.XPATH, "//span[@class=\"weui-desktop-menu__name\"]")
+            writeafile1 = writeafile[1]
+            writeafile1.click()
+            writeafile1 = driver.find_element(By.XPATH, "//a[@class=\"weui-desktop-menu__link menu_report\"]")
+            writeafile1.click()
+            writeafile = driver.find_elements(By.XPATH, "//div[@class=\"weui-desktop-card__inner\"]")
+            writeafile[0].click()
+            writeafile = driver.find_elements(By.XPATH, "//a[@target=\"_blank\"]")
+            writeafile[5].click()
+            windows = driver.window_handles
+            driver.switch_to.window(windows[-1])
+            time.sleep(10)
+            opentag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
+            opentag.click()
+            time.sleep(5)
+            opentag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-btn weui-desktop-btn_default\"]")
+            opentag[0].click()
+            inputtag = driver.find_elements(By.XPATH, "//input[@class=\"weui-desktop-form__input\"]")
+            inputtag[1].send_keys("青春二工大")
+            searchtag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-icon-btn weui-desktop-search__btn\"]")
+            searchtag[0].click()
+            time.sleep(5)
+            selecttag = driver.find_elements(By.XPATH, "//li[@class=\"inner_link_account_item\"]")
+            selecttag[0].click()
+            list = driver.requests
+            for i in list:
+                if("mp.weixin.qq.com" in i.url):
+                    if("cgi-bin/appmsgpublish?sub=list&search_field=null" in i.url):
+                        if(not ('&query=&fakeid=&' in i.url)):
+                            url = i.url
+                            break
+            driver.get(url)
+            time.sleep(5)
+            element = driver.find_element(By.CSS_SELECTOR, "#myElement")
+        except selenium.common.exceptions.NoSuchElementException:
+            driver.delete_all_cookies()
+            LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    
+            LoginTag.click()
+            UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
+            UserNameTag.send_keys(settings["weixinUsername"])
+            PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
+            PasswordTag.send_keys(settings["weixinPassword"])
+            LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
+            LoginTag.click()
+            time.sleep(60)
+            cookie = driver.get_cookies()
+            pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
+            writeafile = driver.find_element(By.XPATH, "//span[@class=\"weui-desktop-menu__name\"]")
+            writeafile.click()
+            writeafile = driver.find_element(By.XPATH, "//div[@class=\"weui-desktop-card__inner\"")
+            writeafile.click()
+            writeafile = driver.find_element(By.XPATH, "//div[@class=\"weui-desktop-card__bd\"]")
+            writeafile.click()
+            writeafile = driver.find_element(By.XPATH, "//li[@class=\"create_article_item\"")
+            writeafile.click()
+            driver.get("https://mp.weixin.qq.com")
+            writeafile = driver.find_element(By.XPATH, "//span[@class=\"weui-desktop-menu__name\"]")
+            writeafile.click()
+            writeafile = driver.find_element(By.XPATH, "//div[@class=\"weui-desktop-card__inner\"")
+            writeafile.click()
+            writeafile = driver.find_element(By.XPATH, "//div[@class=\"weui-desktop-card__bd\"]")
+            writeafile.click()
+            writeafile = driver.find_element(By.XPATH, "//li[@class=\"create_article_item\"")
+            url = writeafile.get_attribute("href")
+            driver.get(url)
     driver.close()
 
 
