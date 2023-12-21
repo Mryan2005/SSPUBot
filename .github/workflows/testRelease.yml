@@ -28,4 +28,5 @@ jobs:
             - name: run
               run: |
                 cd src/
+                chmod 755 ./release.py
                 ./release.py ${{secrets.TESTURL}} ${{secrets.TESTUSERNAME}} ${{secrets.TESTPASSWORD}}
