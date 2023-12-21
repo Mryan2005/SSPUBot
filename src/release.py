@@ -17,7 +17,7 @@ def release(Url, Username, Password, title, content):
     if(platform.system() == "Windows"):
         ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
     elif(platform.system() == "Linux"):
-        ser.path = './geckodriver-v0.33.0-linux64/geckodriver'
+        ser.path = './geckodriver'
     # 连接Edge浏览器
     firefox_options = Options()
     firefox_options.add_argument("-headless")
