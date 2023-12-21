@@ -200,13 +200,6 @@ for i in texts:
                             text = ''
                             flag1 = 0                    
 file2.close()
-class Post(object):
-    def setTitle(self,title):
-        self.title = title
-    def setUrl(self,url):
-        self.url = url
-    def setOutline(self,outline):
-        self.outline = outline
 text = ''
 flag = 0
 file = open('result.txt','r')
