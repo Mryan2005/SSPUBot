@@ -21,7 +21,7 @@ def release(Url, Username, Password, title, content):
         ser.path = './geckodriver'
     # 连接Edge浏览器
     firefox_options = Options()
-    #firefox_options.add_argument("-headless")
+    firefox_options.add_argument("-headless")
     driver = webdriver.Firefox(options=firefox_options, service=ser)
     driver.get(Url)
     loginTag = driver.find_element(By.CLASS_NAME, "item-logIn")
