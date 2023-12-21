@@ -25,8 +25,10 @@ jobs:
                 pip install EasyProcess
                 pip install xvfbwrapper
                 pip install pyvirtualdisplay
+                pip install requests
+                pip install beautifulsoup4
             - name: run
               run: |
                 cd src/
                 chmod 755 ./release.py
-                python ./release.py test "https://akiacgdx.flarum.cloud" ${{ secrets.TESTUSERNAME}} ${{ secrets.TESTPASSWORD}}
+                python ./release.py "https://akiacgdx.flarum.cloud" ${{ secrets.TESTUSERNAME}} ${{ secrets.TESTPASSWORD}}
