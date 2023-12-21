@@ -43,4 +43,4 @@ def release(Url, Username, Password, title, content):
     suubmitTag.click()
     driver.close()
 if __name__ == "__main__":  
-    release(sys.argv[2], sys.argv[3], sys.argv[4], "test", "test")
+    release(sys.argv[1], sys.argv[2], sys.argv[3], "test", "test")
