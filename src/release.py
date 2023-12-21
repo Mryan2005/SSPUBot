@@ -8,11 +8,7 @@ import sys
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
-from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
-import json
-
-import requests
 def release(Url, Username, Password, title, content):
     #display = Display(visible=0, size=(1280, 768))
     #display.start()
