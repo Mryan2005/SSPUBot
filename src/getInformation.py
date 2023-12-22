@@ -351,8 +351,11 @@ def get():
                 driver.get(url)
                 time.sleep(20)
                 outlines = driver.find_elements(By.XPATH, "//section")
-                outline = outlines[0].text[:200]
-                g.setOutline(outline)
+                try:
+                    outline = outlines[0].text[:200]
+                    g.setOutline(outline)
+                except selenium.common.exceptions.StaleElementReferenceException:
+                    g.setOutline("由于网页不支持打开，请到该站点查看")
             except selenium.common.exceptions.NoSuchElementException:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
         file3.write("## 青春二工大\n\n")
@@ -390,13 +393,6 @@ def login():
         for cookie in cookies: 
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
-            for thing in needthings:
-                if(thing in cookie):
-                    value = cookie.get(thing)
-                    cookies1 += thing
-                    cookies1 += "="
-                    cookies1 += str(value)
-                    cookies1 += "; "
             driver.add_cookie(cookie)
         driver.refresh()
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
@@ -422,13 +418,6 @@ def login():
         for cookie in cookies: 
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
-            for thing in needthings:
-                if(thing in cookie):
-                    value = cookie.get(thing)
-                    cookies1 += thing
-                    cookies1 += "="
-                    cookies1 += str(value)
-                    cookies1 += "; "
             driver.add_cookie(cookie)
     except Exception:
         driver.delete_all_cookies()
@@ -451,13 +440,6 @@ def login():
         for cookie in cookies: 
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
-            for thing in needthings:
-                if(thing in cookie):
-                    value = cookie.get(thing)
-                    cookies1 += thing
-                    cookies1 += "="
-                    cookies1 += str(value)
-                    cookies1 += "; "
             driver.add_cookie(cookie)
     return cookies1
 if __name__ == "__main__" :
