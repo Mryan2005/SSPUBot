@@ -11,10 +11,6 @@ import sys
 import time
 import urllib.request
 settings = settings.user
-server = Server(r".\src\browsermob-proxy\bin\browsermob-proxy")
-server.start()
-proxy = server.create_proxy()
-print('proxy', proxy.proxy)
 def MakeError():
     raise Exception("如登")
 ser = Service()
@@ -24,10 +20,6 @@ firefox_options = Options()
 #firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
 #firefox_options.add_argument("-headless")
 driver = webdriver.Firefox(options=firefox_options, service=ser)
-proxy.new_har(options={
-    'captureContent': True,
-    'captureHeaders': True
-})
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 class Post(object):
     def setTitle(self,title):
@@ -267,7 +259,7 @@ def get():
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
         count += 1
-    lastpart = count
+    lastpart = k
     file3 = open("./result.md","a")
     for o in posts:
         file3.write("[")
@@ -286,7 +278,7 @@ def get():
         writeafile[0].click()
         windows = driver.window_handles
         driver.switch_to.window(windows[-1])
-        time.sleep(10)
+        time.sleep(30)
         opentag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
         opentag.click()
         time.sleep(5)
@@ -309,6 +301,7 @@ def get():
                         break
         del driver.requests
         driver.get(url)
+        time.sleep(5)
         htmls = driver.page_source
         text = ''
         flag = 0
@@ -324,6 +317,7 @@ def get():
                     text = text.replace('"','')
                     text = text.replace('\\\\','')
                     text = text.replace('"','')
+                    outline = text.replace("²", "平方")
                     print(text)
                     posts[k].setTitle(title=text)
                     flag = 2
@@ -343,27 +337,41 @@ def get():
                     text = ''
             if(flag == 4):
                 flag = 0
-        driver.close()
         file3 = open("./result.md","a")
         for g in posts[lastpart+1:]:
-            url = g.url
+            try:
+                url = g.url
+            except AttributeError:
+                g.setOutline("由于网页不支持打开，请到该站点查看")
+                continue
             try:
                 if("files/" in url):
                     g.setOutline("由于网页不支持打开，请到该站点查看")
                     continue
                 driver.get(url)
-                outline = driver.find_element(By.XPATH, "//div[@class=\"wp_articlecontent\"]")
-                outline = outline.text[:200]
+                time.sleep(20)
+                outlines = driver.find_elements(By.XPATH, "//section")
+                outline = outlines[0].text[:200]
                 g.setOutline(outline)
             except selenium.common.exceptions.NoSuchElementException:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
         file3.write("## 青春二工大\n\n")
+        for g in posts[lastpart+1:]:
+            outline = g.outline
+            outline = outline.replace("\n", "")
+            outline = outline.replace(" ", "")
+            outline = outline.replace("²", "平方")
+            g.setOutline(outline)
         for o in posts[lastpart+1:]:
             file3.write("[")
             file3.write(o.title)
             file3.write("](")
-            file3.write(o.url)
-            file3.write(")\n")
+            try:
+                file3.write(o.url)
+                file3.write(")\n")
+                file3.write(")\n")
+            except AttributeError:
+                pass
             file3.write(o.outline+"……")
             file3.write("\n\n")
         file3.close()
