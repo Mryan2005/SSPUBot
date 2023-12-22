@@ -377,9 +377,8 @@ def get():
             try:
                 file3.write(o.url)
                 file3.write(")\n")
-                file3.write(")\n")
             except AttributeError:
-                pass
+                file3.write(")\n")
             file3.write(o.outline+"……")
             file3.write("\n\n")
         file3.close()
