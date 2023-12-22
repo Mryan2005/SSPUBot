@@ -145,6 +145,7 @@ def get():
         count += 1
         print(count)
     file3 = open("./result.md","w")
+    file3.write("## 教务处通知\n\n")
     for o in posts:
         file3.write("[")
         file3.write(o.title)
@@ -261,6 +262,7 @@ def get():
         count += 1
     lastpart = k
     file3 = open("./result.md","a")
+    file3.write("## 体育部通知\n\n")
     for o in posts:
         file3.write("[")
         file3.write(o.title)
@@ -303,17 +305,18 @@ def get():
         driver.get(url)
         time.sleep(5)
         htmls = driver.page_source
+        htmls = htmls.replace("\\\\", "")
         text = ''
         flag = 0
         for i in htmls:
             text += i
-            if( '"title\\\\\":\\\\' in text):
+            if( '"title":"' in text):
                 k += 1
                 text = ''
                 flag = 1
                 posts.append(Post())
             if(flag == 1):
-                if('\\\\\"' in text):
+                if('"' in text):
                     text = text.replace('"','')
                     text = text.replace('\\\\','')
                     text = text.replace('"','')
@@ -323,11 +326,11 @@ def get():
                     flag = 2
                     text = ''
             if(flag == 2):
-                if('"link\\\\\":\\\\' in text):
+                if('"link":"' in text):
                     text = ''
                     flag = 3
             if(flag == 3):
-                if('\\\\\"' in text):
+                if('"' in text):
                     text = text.replace('"','')
                     text = text.replace('\\\\','')
                     text = text.replace('"','')
@@ -349,7 +352,7 @@ def get():
                     g.setOutline("由于网页不支持打开，请到该站点查看")
                     continue
                 driver.get(url)
-                time.sleep(20)
+                time.sleep(15)
                 outlines = driver.find_elements(By.XPATH, "//section")
                 try:
                     outline = outlines[0].text[:200]
@@ -361,8 +364,8 @@ def get():
         file3.write("## 青春二工大\n\n")
         for g in posts[lastpart+1:]:
             outline = g.outline
-            outline = outline.replace("\n", "")
-            outline = outline.replace(" ", "")
+            outline = outline.replace("\n", " ")
+            outline = outline.replace(" ", " ")
             outline = outline.replace("²", "平方")
             g.setOutline(outline)
         for o in posts[lastpart+1:]:
@@ -375,7 +378,7 @@ def get():
                 for i in o.title:
                     if(is_word_which_i_need(i)):
                         text1 += i
-                file3.write(text)
+                file3.write(text1)
                 file3.write("](")
             try:
                 file3.write(o.url)
