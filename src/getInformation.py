@@ -364,8 +364,16 @@ def get():
             g.setOutline(outline)
         for o in posts[lastpart+1:]:
             file3.write("[")
-            file3.write(o.title)
-            file3.write("](")
+            try:
+                file3.write(o.title)
+                file3.write("](")
+            except UnicodeEncodeError:
+                text1 = ""
+                for i in o.title:
+                    if(is_word_which_i_need(i)):
+                        text1 += i
+                file3.write(text)
+                file3.write("](")
             try:
                 file3.write(o.url)
                 file3.write(")\n")
