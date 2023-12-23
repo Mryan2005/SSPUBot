@@ -81,7 +81,6 @@ def get():
     flag = 0
     k = -1
     file = open('result.txt','r')
-    file1 = open("result.md",'w')
     for i in file.readlines():
         k += 1
         posts.append(Post())
@@ -260,10 +259,9 @@ def get():
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
         count += 1
-    lastpart = k
     file3 = open("./result.md","a")
     file3.write("## 体育部通知\n\n")
-    for o in posts:
+    for o in posts[lastpart+1:]:
         file3.write("[")
         file3.write(o.title)
         file3.write("](")
@@ -272,6 +270,7 @@ def get():
         file3.write(o.outline+"……")
         file3.write("\n\n")
     file3.close()
+    lastpart = k
     driver.get("https://mp.weixin.qq.com")
     try:
         cookies1 = login()
@@ -388,6 +387,7 @@ def get():
             file3.write(o.outline+"……")
             file3.write("\n\n")
         file3.close()
+        driver.close()
 def login():
     cookies1 = ''
     needthings = ["name", "value", "domain", "path", "expiry", "secure", "httpOnly", "sameSite", "priority", "sameParty", "sourceScheme", "sourcePort", "sourcePriority", "isSameSite", "isSameParty", "isSecure", "isHttpOnly", "isHostOnly", "isSession", "isPersistent", "isExpired", "isSecureContext", "isFirstPartyOnly", "sameSiteStatus", "samePartyStatus", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "domain"]
