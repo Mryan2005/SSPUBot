@@ -15,7 +15,6 @@ publish.py
 src/settings.py
 forumCookies.txt
 2.text
-cookie.txt
 taobao_cookies.pkl
 .vscode/launch.json
 haverelease.log
