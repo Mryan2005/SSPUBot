@@ -1,8 +1,6 @@
 import platform
-from re import U
 from selenium import webdriver
 import time
-import sys
 #import settings
 # 读取配置文件
 #user = settings.user
@@ -24,12 +22,14 @@ def release(Url, Username, Password, title, content):
     firefox_options.add_argument("-headless")
     driver = webdriver.Firefox(options=firefox_options, service=ser)
     driver.get(Url)
+    time.sleep(3)
     loginTag = driver.find_element(By.CLASS_NAME, "item-logIn")
     loginTag.click()
     inputTag = driver.find_element(By.NAME, "identification")
     inputTag.send_keys(Username)
     inputTag = driver.find_element(By.NAME, "password")
     inputTag.send_keys(Password)
+    time.sleep(3)
     loginTag = driver.find_element(By.XPATH, "//button[@type='submit']")
     loginTag.click()
     driver.get(Url)
@@ -39,10 +39,12 @@ def release(Url, Username, Password, title, content):
     elif(Url == "https://akiacgdx.flarum.cloud"):
         releaseTag = driver.find_element(By.XPATH, "//button[@itemclassname=\"App-primaryControl\"]")
     releaseTag.click()
+    time.sleep(10)
     inputTag = driver.find_element(By.XPATH, "//input[@placeholder=\"标题\"]")
     inputTag.send_keys(title)
     inputTag = driver.find_element(By.XPATH, "//textarea[@class=\"FormControl Composer-flexible TextEditor-editor\"]")
     inputTag.send_keys(content)
+    time.sleep(3)
     releaseTag = driver.find_element(By.XPATH, "//button[@class=\"Button Button--primary hasIcon\"]")
     releaseTag.click()
     time.sleep(60)
@@ -55,4 +57,7 @@ def release(Url, Username, Password, title, content):
     suubmitTag.click()
     driver.close()
 if __name__ == "__main__":  
-    release(sys.argv[1], sys.argv[2], sys.argv[3], "test", "test")
+    file = open("result.md", "r")
+    content = file.read()
+    file.close()
+    release("https://akiacgdx.flarum.cloud", "SSPUBot", "sspu123456", "test", content)
