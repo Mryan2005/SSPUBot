@@ -1,6 +1,3 @@
-from itertools import count
-from sys import flags
-import sys
 try:
     from getInformation import getInformation as g
     from release import release as r
