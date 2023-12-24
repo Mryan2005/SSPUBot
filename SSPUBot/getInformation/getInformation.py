@@ -5,7 +5,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
 import io
-import settings
+import SSPUBot.settings.settings as settings
 import sys
 import time
 import urllib.request
