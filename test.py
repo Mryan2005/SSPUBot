@@ -1,2 +1,2 @@
-from SSPUBot import main
+from SSPUBot import mainTest as main
 main.run()

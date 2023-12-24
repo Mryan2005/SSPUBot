@@ -66,7 +66,7 @@ def release(Url, Username, Password, title, content):
     releaseTag.click()
     time.sleep(60)
     if(Url == "https://forum.akiacg.com"):
-        primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-info\"]")
+        primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bug\"]")
     elif(Url == "https://akiacgdx.flarum.cloud"):
         primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bullhorn\"]")
     primaryTag.click()
