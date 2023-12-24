@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="SSPUBot",
-    version="0.1",
+    version="0.2",
     author="Mryan2005",
     author_email="A2564011261@qq.com",
     description="It's a bot that can gather the notice and activity of school",

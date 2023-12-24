@@ -16,8 +16,6 @@ src/settings.py
 forumCookies.txt
 2.text
 taobao_cookies.pkl
-.vscode/launch.json
-haverelease.log
 taobao_cookies.txt
 src/1
 cookie.txt
@@ -26,3 +24,4 @@ SSPUBot/1
 dist/
 SSPUBot.egg-info/
 SSPU_Bot.egg-info/
+haverelease.log

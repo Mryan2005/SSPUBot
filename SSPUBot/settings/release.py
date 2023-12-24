@@ -1,4 +1,5 @@
 import platform
+import settings as s
 from selenium import webdriver
 import time
 #import settings
@@ -58,7 +59,6 @@ def release(Url, Username, Password, title, content):
         releaseTag.click()
     inputTag = driver.find_element(By.XPATH, "//input[@placeholder=\"标题\"]")
     inputTag.send_keys(title)
-    time.sleep(5)
     inputTag = driver.find_element(By.XPATH, "//textarea[@class=\"FormControl Composer-flexible TextEditor-editor\"]")
     inputTag.send_keys(content)
     time.sleep(3)
@@ -72,7 +72,6 @@ def release(Url, Username, Password, title, content):
     primaryTag.click()
     suubmitTag = driver.find_element(By.XPATH, "//div[@class=\"TagSelectionModal-form-submit App-primaryControl\"]")
     suubmitTag.click()
-    time.sleep(5)
     driver.close()
 if __name__ == "__main__":  
     file = open("result.md", "r")
