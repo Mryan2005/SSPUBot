@@ -6,6 +6,8 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
 from browsermobproxy import Server
 import io
+
+from urllib3 import PoolManager
 import settings
 import sys
 import time
@@ -143,6 +145,35 @@ def get():
             g.setOutline("由于网页不支持打开，请到该站点查看")
         count += 1
         print(count)
+    # check the posts, if url in haverelease.log, then delete it
+    try:
+        file4 = open("./haverelease.log", "r")
+    except FileNotFoundError:
+        file4 = open("./haverelease.log", "w")
+        file4.close()
+        file4 = open("./haverelease.log", "r")
+    haverelease = file4.readlines()
+    file4.close()
+    file4 = open("./haverelease.log", "a")
+    flag = 1
+    while(flag == 1):
+        flag = 0
+        for o in posts:
+            try:
+                if(o.url+"\n" in haverelease):
+                    posts.remove(o)
+                    flag = 1
+            except AttributeError:
+                if(o.title+"\n" in haverelease):
+                    posts.remove(o)
+                    flag = 1
+    for o in posts:
+        try:
+            file4.write(o.url+"\n")
+        except AttributeError:
+            file4.write(o.title+"\n")
+    file4.close()
+    # write the posts to the file
     file3 = open("./result.md","w")
     file3.write("## 教务处通知\n\n")
     for o in posts:
@@ -153,8 +184,8 @@ def get():
         file3.write(")\n")
         file3.write(o.outline+"……")
         file3.write("\n\n")
-    count -= 1
-    lastpart = count
+    file3.close()
+    lastpart = len(posts) - 1
     res=urllib.request.urlopen('https://pe2016.sspu.edu.cn/342/list.htm')
     htmlBytes=res.read()
     filr = open('website.html','wb')
@@ -194,6 +225,7 @@ def get():
     file2.close()
     text = ''
     flag = 0
+    k = lastpart
     file = open('result.txt','r')
     for i in file.readlines():
         k += 1
@@ -261,16 +293,37 @@ def get():
         count += 1
     file3 = open("./result.md","a")
     file3.write("## 体育部通知\n\n")
+    # check the posts, if url in haverelease.log, then delete it
+    file4 = open("./haverelease.log", "r")
+    haverelease = file4.readlines()
+    file4.close()
+    file4 = open("./haverelease.log", "a")
+    flag = 1
+    while(flag == 1):
+        flag = 0
+        for o in posts[lastpart+1:]:
+            try:
+                if(o.url+"\n" in haverelease):
+                    posts.remove(o)
+            except AttributeError:
+                if(o.title+"\n" in haverelease):
+                    posts.remove(o)
     for o in posts[lastpart+1:]:
         file3.write("[")
         file3.write(o.title)
         file3.write("](")
         file3.write(o.url)
+        try:
+            file4.write(o.url + "\n")
+        except AttributeError:
+            file4.write(o.title + "\n")
         file3.write(")\n")
         file3.write(o.outline+"……")
         file3.write("\n\n")
     file3.close()
-    lastpart = k
+    file4.close()
+    lastpart = len(posts) - 1
+    k = lastpart
     driver.get("https://mp.weixin.qq.com")
     try:
         cookies1 = login()
@@ -367,6 +420,28 @@ def get():
             outline = outline.replace(" ", " ")
             outline = outline.replace("²", "平方")
             g.setOutline(outline)
+        # check the posts, if url in haverelease.log, then delete it
+        file4 = open("./haverelease.log", "r", encoding="gb2312")
+        haverelease = file4.readlines()
+        file4.close()
+        file4 = open("./haverelease.log", "a")
+        flag = 1
+        while(flag == 1):
+            flag = 0
+            for o in posts[lastpart+1:]:
+                try:
+                    if(o.url+"\n" in haverelease):
+                        posts.remove(o)
+                except AttributeError:
+                    if(o.title+"\n" in haverelease):
+                        posts.remove(o)
+        for o in posts[lastpart+1:]:
+            try:
+                file4.write(o.url+"\n")
+            except AttributeError:
+                file4.write(o.title+"\n")
+        file4.close()
+        # write the posts to the file
         for o in posts[lastpart+1:]:
             file3.write("[")
             try:
@@ -388,6 +463,7 @@ def get():
             file3.write("\n\n")
         file3.close()
         driver.close()
+        driver.quit()
 def login():
     cookies1 = ''
     needthings = ["name", "value", "domain", "path", "expiry", "secure", "httpOnly", "sameSite", "priority", "sameParty", "sourceScheme", "sourcePort", "sourcePriority", "isSameSite", "isSameParty", "isSecure", "isHttpOnly", "isHostOnly", "isSession", "isPersistent", "isExpired", "isSecureContext", "isFirstPartyOnly", "sameSiteStatus", "samePartyStatus", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "domain"]
