@@ -6,6 +6,8 @@ except ModuleNotFoundError:
     from SSPUBot.getInformation import getInformation as g
     from SSPUBot.release import release as r
     from SSPUBot.settings import settings as s
+finally:
+    import datetime
 def run():
     flag = 0
     count = 0
@@ -45,6 +47,8 @@ def run():
         file = open("result.md", "r")
         content = file.read()
         file.close()
-        r.release(s.user["url"], s.user["username"], s.user["password"], "test", content)
+        # get the date and time
+        now = datetime.datetime.now()
+        r.release(s.user["url"], s.user["username"], s.user["password"], now, content)
 if __name__ == "__main__":
     run()
