@@ -4,6 +4,8 @@ import selenium.common.exceptions
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
+import win32api
+import win32con
 import io
 import SSPUBot.settings.settings as settings
 import sys
@@ -302,9 +304,11 @@ def get():
             try:
                 if(o.url+"\n" in haverelease):
                     posts.remove(o)
+                    flag = 1
             except AttributeError:
                 if(o.title+"\n" in haverelease):
                     posts.remove(o)
+                    flag = 1
     for o in posts[lastpart+1:]:
         file3.write("[")
         file3.write(o.title)
@@ -429,9 +433,11 @@ def get():
                 try:
                     if(o.url+"\n" in haverelease):
                         posts.remove(o)
+                        flag = 1
                 except AttributeError:
                     if(o.title+"\n" in haverelease):
                         posts.remove(o)
+                        flag = 1
         for o in posts[lastpart+1:]:
             try:
                 file4.write(o.url+"\n")
@@ -461,6 +467,7 @@ def get():
         file3.close()
         driver.close()
         driver.quit()
+# Use for Login
 def login():
     cookies1 = ''
     needthings = ["name", "value", "domain", "path", "expiry", "secure", "httpOnly", "sameSite", "priority", "sameParty", "sourceScheme", "sourcePort", "sourcePriority", "isSameSite", "isSameParty", "isSecure", "isHttpOnly", "isHostOnly", "isSession", "isPersistent", "isExpired", "isSecureContext", "isFirstPartyOnly", "sameSiteStatus", "samePartyStatus", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "domain"]
@@ -505,6 +512,7 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
+        win32api.MessageBox(0, "这是一个测试提醒OK消息框", "提醒",win32con.MB_OK)
         time.sleep(60)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
