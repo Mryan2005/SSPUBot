@@ -6,6 +6,7 @@ import time
 #user = settings.user
 # import Edge的Service
 from selenium import webdriver
+import selenium.common.exceptions
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
@@ -19,7 +20,7 @@ def release(Url, Username, Password, title, content):
         ser.path = './geckodriver'
     # 连接Edge浏览器
     firefox_options = Options()
-    #firefox_options.add_argument("-headless")
+    firefox_options.add_argument("-headless")
     driver = webdriver.Firefox(options=firefox_options, service=ser)
     driver.get(Url)
     time.sleep(3)

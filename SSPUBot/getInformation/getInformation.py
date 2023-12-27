@@ -19,7 +19,7 @@ ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\gecko
 firefox_options = Options()
 #firefox_options.add_argument('--ignore-certificate-errors')
 #firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
-#firefox_options.add_argument("-headless")
+firefox_options.add_argument("-headless")
 driver = webdriver.Firefox(options=firefox_options, service=ser)
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 class Post(object):
@@ -412,6 +412,8 @@ def get():
                     g.setOutline(outline)
                 except selenium.common.exceptions.StaleElementReferenceException:
                     g.setOutline("由于网页不支持打开，请到该站点查看")
+                except IndexError:
+                    g.setOutline("可能内容被删除了")
             except selenium.common.exceptions.NoSuchElementException:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
         file3.write("## 青春二工大\n\n")
