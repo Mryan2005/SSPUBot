@@ -1,10 +1,10 @@
 try:
-    from getInformation import getInformation as g
+    from getInformation import getInformationTest as g
     from release import releaseTest as r
     from settings import settings as s
 except ModuleNotFoundError:
-    from SSPUBot.getInformation import getInformation as g
-    from SSPUBot.release import release as r
+    from SSPUBot.getInformation import getInformationTest as g
+    from SSPUBot.release import releaseTest as r
     from SSPUBot.settings import settings as s
 def run():
     flag = 0
