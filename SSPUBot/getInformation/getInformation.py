@@ -1,3 +1,4 @@
+from importlib.metadata import requires
 import pickle
 from seleniumwire import webdriver
 import selenium.common.exceptions
@@ -12,6 +13,153 @@ import sys
 import time
 import urllib.request
 settings = settings.user
+# Use for Login
+def login():
+    cookies1 = ''
+    needthings = ["name", "value", "domain", "path", "expiry", "secure", "httpOnly", "sameSite", "priority", "sameParty", "sourceScheme", "sourcePort", "sourcePriority", "isSameSite", "isSameParty", "isSecure", "isHttpOnly", "isHostOnly", "isSession", "isPersistent", "isExpired", "isSecureContext", "isFirstPartyOnly", "sameSiteStatus", "samePartyStatus", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "domain"]
+    try:
+        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
+        for cookie in cookies: 
+            if isinstance(cookie.get('expiry'), float):
+                cookie['expiry'] = int(cookie['expiry'])
+            driver.add_cookie(cookie)
+        driver.refresh()
+        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
+        if writeafile[0] == '':
+            MakeError()
+    except FileNotFoundError:
+        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    
+        LoginTag.click()
+        UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
+        UserNameTag.send_keys(settings["weixinUsername"])
+        PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
+        PasswordTag.send_keys(settings["weixinPassword"])
+        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
+        LoginTag.click()
+        time.sleep(60)
+        cookie = driver.get_cookies()
+        pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
+        driver.refresh()
+        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
+        if writeafile[0] == '':
+                MakeError()
+        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
+        for cookie in cookies: 
+            if isinstance(cookie.get('expiry'), float):
+                cookie['expiry'] = int(cookie['expiry'])
+            driver.add_cookie(cookie)
+    except Exception:
+        driver.delete_all_cookies()
+        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    
+        LoginTag.click()
+        UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
+        UserNameTag.send_keys(settings["weixinUsername"])
+        PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
+        PasswordTag.send_keys(settings["weixinPassword"])
+        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
+        LoginTag.click()
+        win32api.MessageBox(0, "这是一个测试提醒OK消息框", "提醒",win32con.MB_OK)
+        time.sleep(60)
+        cookie = driver.get_cookies()
+        pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
+        driver.refresh()
+        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
+        if writeafile[0] == '':
+                MakeError()
+        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
+        for cookie in cookies: 
+            if isinstance(cookie.get('expiry'), float):
+                cookie['expiry'] = int(cookie['expiry'])
+            driver.add_cookie(cookie)
+    return cookies1
+# 
+def GetOfficialAccount(accountName, posts, k, lastpart):
+        del driver.requests
+        opentag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-btn weui-desktop-btn_default\"]")
+        opentag[0].click()
+        inputtag = driver.find_elements(By.XPATH, "//input[@class=\"weui-desktop-form__input\"]")
+        inputtag[1].send_keys(accountName)
+        searchtag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-icon-btn weui-desktop-search__btn\"]")
+        searchtag[0].click()
+        time.sleep(5)
+        selecttag = driver.find_elements(By.XPATH, "//li[@class=\"inner_link_account_item\"]")
+        selecttag[0].click()
+        list = driver.requests
+        url = ""
+        for i in list:
+            if("mp.weixin.qq.com" in i.url):
+                if("cgi-bin/appmsgpublish?sub=list&search_field=null" in i.url):
+                    if(not ('&query=&fakeid=&' in i.url)):
+                        url = i.url
+                        break
+        driver.get(url)
+        time.sleep(5)
+        htmls = driver.page_source
+        htmls = htmls.replace("\\\\", "")
+        text = ''
+        flag = 0
+        for i in htmls:
+            text += i
+            if( '"title":"' in text):
+                k += 1
+                text = ''
+                flag = 1
+                posts.append(Post())
+            if(flag == 1):
+                if('"' in text):
+                    text = text.replace('"','')
+                    text = text.replace('\\\\','')
+                    text = text.replace('"','')
+                    outline = text.replace("²", "平方")
+                    print(text)
+                    posts[k].setTitle(title=text)
+                    flag = 2
+                    text = ''
+            if(flag == 2):
+                if('"link":"' in text):
+                    text = ''
+                    flag = 3
+            if(flag == 3):
+                if('"' in text):
+                    text = text.replace('"','')
+                    text = text.replace('\\\\','')
+                    text = text.replace('"','')
+                    print(text)
+                    posts[k].setUrl(url=text)
+                    flag = 4
+                    text = ''
+            if(flag == 4):
+                flag = 0
+        file3 = open("./result.md","a")
+        for g in posts[lastpart+1:]:
+            try:
+                url = g.url
+            except AttributeError:
+                g.setOutline("由于网页不支持打开，请到该站点查看")
+                continue
+            try:
+                if("files/" in url):
+                    g.setOutline("由于网页不支持打开，请到该站点查看")
+                    continue
+                driver.get(url)
+                time.sleep(15)
+                outlines = driver.find_elements(By.XPATH, "//section")
+                try:
+                    outline = outlines[0].text[:200]
+                    g.setOutline(outline)
+                except selenium.common.exceptions.StaleElementReferenceException:
+                    g.setOutline("由于网页不支持打开，请到该站点查看")
+                except IndexError:
+                    g.setOutline("可能内容被删除了")
+            except selenium.common.exceptions.NoSuchElementException:
+                g.setOutline("由于网页不支持打开，请到该站点查看")
+        file3.write("## "+accountName+"\n\n")
+        for g in posts[lastpart+1:]:
+            outline = g.outline
+            outline = outline.replace("\n", " ")
+            outline = outline.replace(" ", " ")
+            outline = outline.replace("²", "平方")
+            g.setOutline(outline)
 def MakeError():
     raise Exception("如登")
 ser = Service()
@@ -323,8 +471,6 @@ def get():
         file3.write("\n\n")
     file3.close()
     file4.close()
-    lastpart = len(posts) - 1
-    k = lastpart
     driver.get("https://mp.weixin.qq.com")
     try:
         cookies1 = login()
@@ -337,92 +483,7 @@ def get():
         opentag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
         opentag.click()
         time.sleep(5)
-        opentag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-btn weui-desktop-btn_default\"]")
-        opentag[0].click()
-        inputtag = driver.find_elements(By.XPATH, "//input[@class=\"weui-desktop-form__input\"]")
-        inputtag[1].send_keys("青春二工大")
-        searchtag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-icon-btn weui-desktop-search__btn\"]")
-        searchtag[0].click()
-        time.sleep(5)
-        selecttag = driver.find_elements(By.XPATH, "//li[@class=\"inner_link_account_item\"]")
-        selecttag[0].click()
-        list = driver.requests
-        url = ""
-        for i in list:
-            if("mp.weixin.qq.com" in i.url):
-                if("cgi-bin/appmsgpublish?sub=list&search_field=null" in i.url):
-                    if(not ('&query=&fakeid=&' in i.url)):
-                        url = i.url
-                        break
-        del driver.requests
-        driver.get(url)
-        time.sleep(5)
-        htmls = driver.page_source
-        htmls = htmls.replace("\\\\", "")
-        text = ''
-        flag = 0
-        for i in htmls:
-            text += i
-            if( '"title":"' in text):
-                k += 1
-                text = ''
-                flag = 1
-                posts.append(Post())
-            if(flag == 1):
-                if('"' in text):
-                    text = text.replace('"','')
-                    text = text.replace('\\\\','')
-                    text = text.replace('"','')
-                    outline = text.replace("²", "平方")
-                    print(text)
-                    posts[k].setTitle(title=text)
-                    flag = 2
-                    text = ''
-            if(flag == 2):
-                if('"link":"' in text):
-                    text = ''
-                    flag = 3
-            if(flag == 3):
-                if('"' in text):
-                    text = text.replace('"','')
-                    text = text.replace('\\\\','')
-                    text = text.replace('"','')
-                    print(text)
-                    posts[k].setUrl(url=text)
-                    flag = 4
-                    text = ''
-            if(flag == 4):
-                flag = 0
-        file3 = open("./result.md","a")
-        for g in posts[lastpart+1:]:
-            try:
-                url = g.url
-            except AttributeError:
-                g.setOutline("由于网页不支持打开，请到该站点查看")
-                continue
-            try:
-                if("files/" in url):
-                    g.setOutline("由于网页不支持打开，请到该站点查看")
-                    continue
-                driver.get(url)
-                time.sleep(15)
-                outlines = driver.find_elements(By.XPATH, "//section")
-                try:
-                    outline = outlines[0].text[:200]
-                    g.setOutline(outline)
-                except selenium.common.exceptions.StaleElementReferenceException:
-                    g.setOutline("由于网页不支持打开，请到该站点查看")
-                except IndexError:
-                    g.setOutline("可能内容被删除了")
-            except selenium.common.exceptions.NoSuchElementException:
-                g.setOutline("由于网页不支持打开，请到该站点查看")
-        file3.write("## 青春二工大\n\n")
-        for g in posts[lastpart+1:]:
-            outline = g.outline
-            outline = outline.replace("\n", " ")
-            outline = outline.replace(" ", " ")
-            outline = outline.replace("²", "平方")
-            g.setOutline(outline)
+        GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
         # check the posts, if url in haverelease.log, then delete it
         file4 = open("./haverelease.log", "r", encoding="gb2312")
         haverelease = file4.readlines()
@@ -447,6 +508,7 @@ def get():
                 file4.write(o.title+"\n")
         file4.close()
         # write the posts to the file
+        file3 = open("./result.md","a")
         for o in posts[lastpart+1:]:
             file3.write("[")
             try:
@@ -464,69 +526,18 @@ def get():
                 file3.write(")\n")
             except AttributeError:
                 file3.write(")\n")
-            file3.write(o.outline+"……")
+            try:
+                file3.write(o.outline+"……")
+            except UnicodeEncodeError:
+                text = ''
+                for i in o.outline:
+                    if(is_word_which_i_need(i)):
+                        text += i
+                file3.write(text+"……")
             file3.write("\n\n")
         file3.close()
         driver.close()
         driver.quit()
-# Use for Login
-def login():
-    cookies1 = ''
-    needthings = ["name", "value", "domain", "path", "expiry", "secure", "httpOnly", "sameSite", "priority", "sameParty", "sourceScheme", "sourcePort", "sourcePriority", "isSameSite", "isSameParty", "isSecure", "isHttpOnly", "isHostOnly", "isSession", "isPersistent", "isExpired", "isSecureContext", "isFirstPartyOnly", "sameSiteStatus", "samePartyStatus", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue", "samePartyValue", "domain"]
-    try:
-        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
-        for cookie in cookies: 
-            if isinstance(cookie.get('expiry'), float):
-                cookie['expiry'] = int(cookie['expiry'])
-            driver.add_cookie(cookie)
-        driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile[0] == '':
-            MakeError()
-    except FileNotFoundError:
-        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    
-        LoginTag.click()
-        UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
-        UserNameTag.send_keys(settings["weixinUsername"])
-        PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
-        PasswordTag.send_keys(settings["weixinPassword"])
-        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
-        LoginTag.click()
-        time.sleep(60)
-        cookie = driver.get_cookies()
-        pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
-        driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile[0] == '':
-                MakeError()
-        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
-        for cookie in cookies: 
-            if isinstance(cookie.get('expiry'), float):
-                cookie['expiry'] = int(cookie['expiry'])
-            driver.add_cookie(cookie)
-    except Exception:
-        driver.delete_all_cookies()
-        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")    
-        LoginTag.click()
-        UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
-        UserNameTag.send_keys(settings["weixinUsername"])
-        PasswordTag = driver.find_element(By.XPATH, "//input[@name=\"password\"]")
-        PasswordTag.send_keys(settings["weixinPassword"])
-        LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
-        LoginTag.click()
-        win32api.MessageBox(0, "这是一个测试提醒OK消息框", "提醒",win32con.MB_OK)
-        time.sleep(60)
-        cookie = driver.get_cookies()
-        pickle.dump(cookie, open('taobao_cookies.pkl','wb'))
-        driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile[0] == '':
-                MakeError()
-        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
-        for cookie in cookies: 
-            if isinstance(cookie.get('expiry'), float):
-                cookie['expiry'] = int(cookie['expiry'])
-            driver.add_cookie(cookie)
-    return cookies1
+
 if __name__ == "__main__" :
     get()
