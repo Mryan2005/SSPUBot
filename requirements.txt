@@ -1,0 +1,4 @@
+requests~=2.31.0
+pywin32~=305
+setuptools~=68.0.0
+selenium>=4.0.0
