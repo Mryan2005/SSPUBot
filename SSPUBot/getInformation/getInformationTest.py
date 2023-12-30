@@ -535,6 +535,7 @@ def get():
         file3.write("\n\n")
     file3.close()
     file4.close()
+    lastpart = len(posts)
     driver.get("https://mp.weixin.qq.com")
     try:
         login()
@@ -549,7 +550,7 @@ def get():
         flag = 1
         while flag == 1:
             flag = 0
-            for o in posts[lastpart + 1:]:
+            for o in posts[lastpart:]:
                 try:
                     if o.url + "\n" in havereleased:
                         posts.remove(o)
@@ -572,7 +573,7 @@ def get():
         file4.close()
         # write the posts to the file
         file3 = open("./result.md", "a")
-        for o in posts[lastpart + 1:]:
+        for o in posts[lastpart:]:
             file3.write("[")
             try:
                 file3.write(o.title)
