@@ -1,3 +1,5 @@
+import sys
+
 try:
     from getInformation import getInformation as g
     from release import release as r
@@ -14,7 +16,7 @@ def run():
     flag = 0
     count = 0
     noNotice = [0, 0, 0]
-    g.get()
+    g.get(sys.argv[1])
     file = open("result.md", "r")
     contents = file.readlines()
     file.close()
