@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
+
 try:
     import SSPUBot.settings.settings as settings
 except ModuleNotFoundError:
@@ -131,6 +132,7 @@ def login():
 # define the function to get the official account information
 def GetOfficialAccount(accountName, posts, k, lastpart):
     time.sleep(3)
+    writeafile = []
     try:
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     except selenium.common.exceptions.NoSuchElementException:
@@ -138,9 +140,11 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     finally:
         writeafile[0].click()
+    time.sleep(5)
     windows = driver.window_handles
     driver.switch_to.window(windows[-1])
     time.sleep(3)
+    openingTag = []
     try:
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
     except selenium.common.exceptions.NoSuchElementException:
@@ -243,6 +247,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     driver.close()
     windows = driver.window_handles
     driver.switch_to.window(windows[0])
+    driver.refresh()
 
 
 # define the function to get the information from the school website
@@ -594,7 +599,6 @@ def get():
                 file3.write(text + "……")
             file3.write("\n\n")
         file3.close()
-        driver.close()
         driver.quit()
 
 
