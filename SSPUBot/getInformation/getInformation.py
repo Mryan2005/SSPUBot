@@ -12,7 +12,10 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 
-import SSPUBot.settings.settings as settings
+try:
+    import SSPUBot.settings.settings as settings
+except ModuleNotFoundError:
+    from ..settings import settings
 
 settings = settings.user
 
@@ -81,7 +84,7 @@ def login():
             driver.add_cookie(cookie)
         driver.refresh()
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile[0] == '':
+        if len(writeafile) == 0:
             MakeError()
     except FileNotFoundError:
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")
@@ -97,14 +100,14 @@ def login():
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile[0] == '':
+        if len(writeafile) == 0:
             MakeError()
         cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
         for cookie in cookies:
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
             driver.add_cookie(cookie)
-    except notLoginError:
+    except notLoginError or IndexError:
         driver.delete_all_cookies()
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")
         LoginTag.click()
@@ -114,14 +117,11 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        win32api.MessageBox(0, "这是一个测试提醒OK消息框", "提醒", win32con.MB_OK)
+        win32api.MessageBox(0, "请扫码登录", "提醒", win32con.MB_OK)
         time.sleep(60)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile[0] == '':
-            MakeError()
         cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
         for cookie in cookies:
             if isinstance(cookie.get('expiry'), float):
@@ -132,6 +132,7 @@ def login():
 # define the function to get the official account information
 def GetOfficialAccount(accountName, posts, k, lastpart):
     time.sleep(3)
+    writeafile = []
     try:
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     except selenium.common.exceptions.NoSuchElementException:
@@ -139,9 +140,11 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     finally:
         writeafile[0].click()
+    time.sleep(5)
     windows = driver.window_handles
     driver.switch_to.window(windows[-1])
     time.sleep(3)
+    openingTag = []
     try:
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
     except selenium.common.exceptions.NoSuchElementException:
@@ -214,10 +217,11 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
             g.setOutline("由于网页不支持打开，请到该站点查看")
             continue
         try:
-            if "files/" in url:
+            time.sleep(3)
+            try:
+                driver.get(url)
+            except selenium.common.exceptions.InvalidArgumentException:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
-                continue
-            driver.get(url)
             try:
                 time.sleep(3)
                 outlines = driver.find_elements(By.XPATH, "//section")
@@ -230,7 +234,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
             except selenium.common.exceptions.StaleElementReferenceException:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
             except IndexError:
-                g.setOutline("可能内容被删除了")
+                g.setOutline("可能内容被删除了，或者这是张图片")
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
     file3.write("## " + accountName + "\n\n")
@@ -243,6 +247,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     driver.close()
     windows = driver.window_handles
     driver.switch_to.window(windows[0])
+    driver.refresh()
 
 
 # define the function to get the information from the school website
@@ -530,6 +535,7 @@ def get():
         file3.write("\n\n")
     file3.close()
     file4.close()
+    lastpart = len(posts)
     driver.get("https://mp.weixin.qq.com")
     try:
         login()
@@ -544,7 +550,7 @@ def get():
         flag = 1
         while flag == 1:
             flag = 0
-            for o in posts[lastpart + 1:]:
+            for o in posts[lastpart:]:
                 try:
                     if o.url + "\n" in havereleased:
                         posts.remove(o)
@@ -553,15 +559,22 @@ def get():
                     if o.title + "\n" in havereleased:
                         posts.remove(o)
                         flag = 1
-        for o in posts[lastpart + 1:]:
+                except TypeError:
+                    if o.title + "\n" in havereleased:
+                        posts.remove(o)
+                        flag = 1
+        lastpart = len(posts)
+        for o in posts[lastpart - 1:]:
             try:
                 file4.write(o.url + "\n")
             except AttributeError:
                 file4.write(o.title + "\n")
+            except TypeError:
+                file4.write(o.title + "\n")
         file4.close()
         # write the posts to the file
         file3 = open("./result.md", "a")
-        for o in posts[lastpart + 1:]:
+        for o in posts[lastpart:]:
             file3.write("[")
             try:
                 file3.write(o.title)
@@ -588,7 +601,6 @@ def get():
                 file3.write(text + "……")
             file3.write("\n\n")
         file3.close()
-        driver.close()
         driver.quit()
 
 
@@ -600,6 +612,7 @@ firefox_options = Options()
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
 firefox_options.add_argument("-headless")
 driver = webdriver.Firefox(options=firefox_options, service=ser)
+driver.set_page_load_timeout(30)  # 页面加载超时时间
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
 
 if __name__ == "__main__":

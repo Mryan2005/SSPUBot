@@ -563,7 +563,8 @@ def get():
                     if o.title + "\n" in havereleased:
                         posts.remove(o)
                         flag = 1
-        for o in posts[lastpart + 1:]:
+        lastpart = len(posts)
+        for o in posts[lastpart - 1:]:
             try:
                 file4.write(o.url + "\n")
             except AttributeError:
