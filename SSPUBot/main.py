@@ -8,8 +8,6 @@ except ModuleNotFoundError:
     from SSPUBot.settings import settings as s
 finally:
     import datetime
-
-
 def run():
     # define some values
     flag = 0
@@ -49,7 +47,5 @@ def run():
         # get the date and time
         now = datetime.datetime.now()
         r.release(s.user["url"], s.user["username"], s.user["password"], now, content)
-
-
 if __name__ == "__main__":
     run()
