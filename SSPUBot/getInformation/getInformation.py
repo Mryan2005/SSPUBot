@@ -555,7 +555,7 @@ def get():
     flag = 1
     while flag == 1:
         flag = 0
-        for o in posts[lastpart + 1:]:
+        for o in posts:
             try:
                 if o.url + "\n" in havereleased:
                     posts.remove(o)
@@ -565,7 +565,7 @@ def get():
                     posts.remove(o)
                     flag = 1
     # write the posts to the file
-    for o in posts[lastpart + 1:]:
+    for o in posts:
         file3.write("[")
         file3.write(o.title)
         file3.write("](")
@@ -579,7 +579,6 @@ def get():
         file3.write("\n\n")
     file3.close()
     file4.close()
-    lastpart = len(posts)
     # get the information from WeChat Official Account
     driver.get("https://mp.weixin.qq.com")
     try:
@@ -595,7 +594,7 @@ def get():
         flag = 1
         while flag == 1:
             flag = 0
-            for o in posts[lastpart:]:
+            for o in posts:
                 try:
                     if o.url + "\n" in havereleased:
                         posts.remove(o)
@@ -608,8 +607,7 @@ def get():
                     if o.title + "\n" in havereleased:
                         posts.remove(o)
                         flag = 1
-        lastpart = len(posts)
-        for o in posts[lastpart - 1:]:
+        for o in posts:
             try:
                 file4.write(o.url + "\n")
             except AttributeError:
@@ -619,7 +617,7 @@ def get():
         file4.close()
         # write the posts to the file
         file3 = open("./result.md", "a")
-        for o in posts[lastpart:]:
+        for o in posts:
             file3.write("[")
             try:
                 file3.write(o.title)
@@ -635,6 +633,8 @@ def get():
                 file3.write(o.url)
                 file3.write(")\n")
             except AttributeError:
+                file3.write(")\n")
+            except TypeError:
                 file3.write(")\n")
             try:
                 file3.write(o.outline + "……")
