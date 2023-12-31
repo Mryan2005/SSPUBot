@@ -11,41 +11,38 @@ finally:
 
 
 def run():
+    # define some values
     flag = 0
     count = 0
-    noNotice = [0, 0, 0]
+    noNotice = []
     g.get()
     file = open("result.md", "r")
     contents = file.readlines()
     file.close()
+    # check the result.md
     for i in contents:
-        if "## 教务处通知" == i and flag == 0:
+        if '## ' in i and flag == 0:
             flag = 1
+            continue
         if flag == 1:
             if "\n" == i:
                 flag = 2
+                continue
         if flag == 2:
-            if ("## 体育部通知" == i):
-                noNotice[0] = 1
-            flag = 3
-        if (flag == 3):
-            if ("\n" == i):
-                flag = 4
-        if (flag == 4):
-            if ("## 青春二工大" == i):
-                noNotice[1] = 1
-            flag = 5
-        if (flag == 5):
-            if ("\n" == i):
-                flag = 6
-        if (flag == 6):
-            if ("\n" == i):
-                noNotice[2] = 1
-                break
+            if "## " in i:
+                noNotice.append(1)
+                flag = 3
+            else:
+                noNotice.append(0)
+                flag = 0
+            if "## " in i and contents.index(i) + 1 == len(contents):
+                noNotice.append(1)
+        if flag == 3:
+            flag = 1
     for i in noNotice:
-        if (i == 1):
+        if i == 1:
             count += 1
-    if (count != 3):
+    if count != len(noNotice):
         file = open("result.md", "r")
         content = file.read()
         file.close()
