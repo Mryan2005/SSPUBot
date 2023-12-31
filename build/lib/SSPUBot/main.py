@@ -1,3 +1,5 @@
+import sys
+
 try:
     from getInformation import getInformation as g
     from release import release as r
@@ -8,11 +10,13 @@ except ModuleNotFoundError:
     from SSPUBot.settings import settings as s
 finally:
     import datetime
+
+
 def run():
     flag = 0
     count = 0
     noNotice = [0, 0, 0]
-    g.get()
+    g.get(sys.argv[1])
     file = open("result.md", "r")
     contents = file.readlines()
     file.close()
@@ -50,5 +54,7 @@ def run():
         # get the date and time
         now = datetime.datetime.now()
         r.release(s.user["url"], s.user["username"], s.user["password"], now, content)
+
+
 if __name__ == "__main__":
     run()

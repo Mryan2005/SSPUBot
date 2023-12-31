@@ -1,11 +1,11 @@
 import platform
+import settings as s
 from selenium import webdriver
 import time
 #import settings
 # 读取配置文件
 #user = settings.user
 # import Edge的Service
-import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -59,28 +59,19 @@ def release(Url, Username, Password, title, content):
         releaseTag.click()
     inputTag = driver.find_element(By.XPATH, "//input[@placeholder=\"标题\"]")
     inputTag.send_keys(title)
-    time.sleep(5)
     inputTag = driver.find_element(By.XPATH, "//textarea[@class=\"FormControl Composer-flexible TextEditor-editor\"]")
     inputTag.send_keys(content)
     time.sleep(3)
     releaseTag = driver.find_element(By.XPATH, "//button[@class=\"Button Button--primary hasIcon\"]")
     releaseTag.click()
-    time.sleep(10)
-    try:
-        if(Url == "https://forum.akiacg.com"):
-            primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bug\"]")
-        elif(Url == "https://akiacgdx.flarum.cloud"):
-            primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bullhorn\"]")
-    except selenium.common.exceptions.NoSuchElementException:
-        time.sleep(20)
-        if(Url == "https://forum.akiacg.com"):
-            primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bug\"]")
-        elif(Url == "https://akiacgdx.flarum.cloud"):
-            primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bullhorn\"]")
+    time.sleep(60)
+    if(Url == "https://forum.akiacg.com"):
+        primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bug\"]")
+    elif(Url == "https://akiacgdx.flarum.cloud"):
+        primaryTag = driver.find_element(By.XPATH, "//i[@class=\"icon fas fa-bullhorn\"]")
     primaryTag.click()
     suubmitTag = driver.find_element(By.XPATH, "//div[@class=\"TagSelectionModal-form-submit App-primaryControl\"]")
     suubmitTag.click()
-    time.sleep(5)
     driver.close()
 if __name__ == "__main__":  
     file = open("result.md", "r")

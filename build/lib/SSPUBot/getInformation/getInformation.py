@@ -11,7 +11,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
-from seleniumwire.webdriver import Firefox
 
 try:
     import SSPUBot.settings.settings as settings
@@ -20,19 +19,8 @@ except ModuleNotFoundError:
 
 settings = settings.user
 
-# define the driver
-ser = Service()
-ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
-firefox_options = Options()
-# firefox_options.add_argument('--ignore-certificate-errors')
-# firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
-if sys.argv[0] == 'normal':
-    firefox_options.add_argument("-headless")
-elif sys.argv[0] == 'test':
-    pass
-driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
-driver.set_page_load_timeout(30)  # set the time to load the page
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
+# initialize the driver
+global driver
 
 
 # define the classes
@@ -266,7 +254,20 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
 
 
 # define the function to get the information from the school website
-def get():
+def get(static):
+    # define the driver
+    ser = Service()
+    ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
+    firefox_options = Options()
+    # firefox_options.add_argument('--ignore-certificate-errors')
+    # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
+    if static == 'normal':
+        firefox_options.add_argument("-headless")
+    elif static == 'test':
+        pass
+    driver = webdriver.Firefox(options=firefox_options, service=ser)
+    driver.set_page_load_timeout(30)  # set the time to load the page
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')
     res = urllib.request.urlopen('https://jwc.sspu.edu.cn/897/list.htm')
     htmlBytes = res.read()
     websiteResultList = open('website.html', 'wb')
