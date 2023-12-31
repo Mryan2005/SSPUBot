@@ -1,3 +1,4 @@
+# import some modules
 try:
     from getInformation import getInformation as g
     from release import release as r
@@ -10,6 +11,7 @@ finally:
     import datetime
 
 
+# define the function to run the bot
 def run():
     # define some values
     flag = 0
@@ -46,10 +48,12 @@ def run():
         file = open("result.md", "r")
         content = file.read()
         file.close()
-        # get the date and time
-        now = datetime.datetime.now()
-        r.release(s.user["url"], s.user["username"], s.user["password"], now, content)
+        # get the date and time of releasing
+        releasingTime = datetime.datetime.now()
+        # release the result
+        r.release(s.user["url"], s.user["username"], s.user["password"], releasingTime, content)
 
 
+# run the bot if this file is the main file
 if __name__ == "__main__":
     run()

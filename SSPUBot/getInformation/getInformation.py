@@ -1,3 +1,6 @@
+# Function: get the information from the school website and the official account
+# Path: SSPUBot/getInformation/getInformation.py
+# Compare this snippet from SSPUBot/release/release.py:
 import io
 import pickle
 import sys
@@ -18,6 +21,7 @@ try:
 except ModuleNotFoundError:
     from ..settings import settings
 
+# read the settings
 settings = settings.user
 
 # define the driver
@@ -92,6 +96,7 @@ def login():
                     "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue",
                     "samePartyValue", "domain"]
     try:
+        # login with cookies
         cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
         for cookie in cookies:
             if isinstance(cookie.get('expiry'), float):
@@ -102,6 +107,7 @@ def login():
         if len(writeafile) == 0:
             MakeError()
     except FileNotFoundError:
+        # login with username and password
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")
         LoginTag.click()
         UserNameTag = driver.find_element(By.XPATH, "//input[@name=\"account\"]")
@@ -123,6 +129,7 @@ def login():
                 cookie['expiry'] = int(cookie['expiry'])
             driver.add_cookie(cookie)
     except notLoginError or IndexError:
+        # login with username and password if the cookies are wrong
         driver.delete_all_cookies()
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")
         LoginTag.click()
@@ -147,7 +154,10 @@ def login():
 # define the function to get the official account information
 def GetOfficialAccount(accountName, posts, k, lastpart):
     time.sleep(3)
+    # define some values
     writeafile = []
+    openingTag = []
+
     try:
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     except selenium.common.exceptions.NoSuchElementException:
@@ -159,7 +169,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     windows = driver.window_handles
     driver.switch_to.window(windows[-1])
     time.sleep(3)
-    openingTag = []
+
     try:
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
     except selenium.common.exceptions.NoSuchElementException:
@@ -167,8 +177,10 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
     finally:
         openingTag.click()
-    time.sleep(3)
+        time.sleep(3)
+
     del driver.requests
+
     openingTag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-btn weui-desktop-btn_default\"]")
     openingTag[0].click()
     inputtingTag = driver.find_elements(By.XPATH, "//input[@class=\"weui-desktop-form__input\"]")
@@ -178,6 +190,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     time.sleep(5)
     selectingTag = driver.find_elements(By.XPATH, "//li[@class=\"inner_link_account_item\"]")
     selectingTag[0].click()
+    # get the url of the official account
     requestList = driver.requests
     url = ""
     for i in requestList:
@@ -188,10 +201,12 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                     break
     driver.get(url)
     time.sleep(3)
+    # get the information of the official account
     htmls = driver.page_source
     htmls = htmls.replace("\\\\", "")
     text = ''
     flag = 0
+    # get the title and the url of the post
     for i in htmls:
         text += i
         if '"title":"' in text:
@@ -224,6 +239,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 text = ''
         if flag == 4:
             flag = 0
+    # get the outline of the post
     file3 = open("./result.md", "a")
     for g in posts[lastpart + 1:]:
         try:
@@ -252,6 +268,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 g.setOutline("可能内容被删除了，或者这是张图片")
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
+    # write the account name to the file
     file3.write("## " + accountName + "\n\n")
     for g in posts[lastpart + 1:]:
         outline = g.outline
@@ -259,6 +276,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         outline = outline.replace(" ", " ")
         outline = outline.replace("²", "平方")
         g.setOutline(outline)
+    # close the page, select the first page and refresh the page.
     driver.close()
     windows = driver.window_handles
     driver.switch_to.window(windows[0])
@@ -267,6 +285,13 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
 
 # define the function to get the information from the school website
 def get():
+    # define some values
+    text = ''
+    flag = 0
+    flag1 = 0
+    posts = []
+    k = -1
+    # get the information from the school website which is "jwc.sspu.edu.cn"
     res = urllib.request.urlopen('https://jwc.sspu.edu.cn/897/list.htm')
     htmlBytes = res.read()
     websiteResultList = open('website.html', 'wb')
@@ -278,10 +303,7 @@ def get():
     file2 = open('result.txt', 'w')
     texts = file.readlines()
     file.close()
-    text = ''
-    flag = 0
-    flag1 = 0
-    posts = []
+    # get the title and the url of the post ---- start
     for i in texts:
         if '<ul class="news_list list2">' in i.decode("utf8") and flag == 0:
             flag = 1
@@ -305,9 +327,9 @@ def get():
                                 text = ''
                                 flag1 = 0
     file2.close()
+    # get the title and the url of the post ---- end
+    # get the outline of the post ---- start
     text = ''
-    flag = 0
-    k = -1
     file = open('result.txt', 'r')
     for i in file.readlines():
         k += 1
@@ -358,7 +380,6 @@ def get():
             if flag == 8:
                 flag = 0
                 break
-    # get the outline of the post
     count = 0
     for g in posts:
         url = g.url
@@ -371,7 +392,8 @@ def get():
             g.setOutline("由于网页不支持打开，请到该站点查看")
         count += 1
         print(count)
-    # check the posts, if url in havereleased.log, then delete it
+    # get the outline of the post ---- end
+    # check the posts, if url in havereleased.log, then delete it ---- start
     try:
         file4 = open("./havereleased.log", "r")
     except FileNotFoundError:
@@ -399,7 +421,8 @@ def get():
         except AttributeError:
             file4.write(o.title + "\n")
     file4.close()
-    # write the posts to the file
+    # check the posts, if url in havereleased.log, then delete it ---- end
+    # write the posts to the file ---- start
     file3 = open("./result.md", "w")
     file3.write("## 教务处通知\n\n")
     for o in posts:
@@ -411,7 +434,15 @@ def get():
         file3.write(o.outline + "……")
         file3.write("\n\n")
     file3.close()
+    # write the posts to the file ---- end
+    # get the information from the school website which is "pe2016.sspu.edu.cn"
+    # define some values ---- start
     lastpart = len(posts) - 1
+    text = ''
+    flag = 0
+    flag1 = 0
+    # define some values ---- end
+    # get the title and the url of the post
     res = urllib.request.urlopen('https://pe2016.sspu.edu.cn/342/list.htm')
     htmlBytes = res.read()
     websiteResultList = open('website.html', 'wb')
@@ -423,9 +454,6 @@ def get():
     file2 = open('result.txt', 'w')
     texts = file.readlines()
     file.close()
-    text = ''
-    flag = 0
-    flag1 = 0
     for i in texts:
         if '<div class="dht_blank1"></div>' in i.decode("utf8") and flag == 0:
             flag = 1
@@ -449,6 +477,7 @@ def get():
                                 text = ''
                                 flag1 = 0
     file2.close()
+    # get the outline of the post
     text = ''
     flag = 0
     k = lastpart
@@ -502,7 +531,6 @@ def get():
             if flag == 8:
                 flag = 0
                 break
-        # get the outline of the post
         file.close()
     for g in posts[lastpart + 1:]:
         url = g.url
@@ -536,6 +564,7 @@ def get():
                 if o.title + "\n" in havereleased:
                     posts.remove(o)
                     flag = 1
+    # write the posts to the file
     for o in posts[lastpart + 1:]:
         file3.write("[")
         file3.write(o.title)
@@ -551,6 +580,7 @@ def get():
     file3.close()
     file4.close()
     lastpart = len(posts)
+    # get the information from WeChat Official Account
     driver.get("https://mp.weixin.qq.com")
     try:
         login()
@@ -615,7 +645,9 @@ def get():
                         text += i
                 file3.write(text + "……")
             file3.write("\n\n")
+        # write the posts to the file ---- end
         file3.close()
+        # close the browser
         driver.quit()
 
 
