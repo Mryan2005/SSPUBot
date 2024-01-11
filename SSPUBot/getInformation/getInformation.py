@@ -73,6 +73,9 @@ def MakeError():
     raise notLoginError("如登")
 
 
+posts = []
+
+
 # define the function to check the word
 def is_word_which_i_need(chars):
     for i in chars:
@@ -284,12 +287,11 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
 
 
 # define the function to get the information from the school website
-def get():
-    # define some values
+
+def getSchooljwc():
     text = ''
     flag = 0
     flag1 = 0
-    posts = []
     k = -1
     # get the information from the school website which is "jwc.sspu.edu.cn"
     res = urllib.request.urlopen('https://jwc.sspu.edu.cn/897/list.htm')
@@ -380,7 +382,6 @@ def get():
             if flag == 8:
                 flag = 0
                 break
-    count = 0
     for g in posts:
         url = g.url
         try:
@@ -390,16 +391,12 @@ def get():
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
-        count += 1
-        print(count)
     # get the outline of the post ---- end
     # check the posts, if url in havereleased.log, then delete it ---- start
     try:
-        file4 = open("./havereleased.log", "r")
+        file4 = open("./havereleased.log", "r+")
     except FileNotFoundError:
-        file4 = open("./havereleased.log", "w")
-        file4.close()
-        file4 = open("./havereleased.log", "r")
+        file4 = open("./havereleased.log", "w+")
     havereleased = file4.readlines()
     file4.close()
     file4 = open("./havereleased.log", "a")
@@ -430,11 +427,14 @@ def get():
         file3.write(o.title)
         file3.write("](")
         file3.write(o.url)
-        file3.write(")\n")
+        file3.write(")  \n")
         file3.write(o.outline + "……")
         file3.write("\n\n")
     file3.close()
     # write the posts to the file ---- end
+
+
+def getschoolpe():
     # get the information from the school website which is "pe2016.sspu.edu.cn"
     # define some values ---- start
     lastpart = len(posts) - 1
@@ -544,7 +544,6 @@ def get():
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
-        count += 1
     file3 = open("./result.md", "a")
     file3.write("## 体育部通知\n\n")
     # check the posts, if url in havereleased.log, then delete it
@@ -574,11 +573,17 @@ def get():
             file4.write(o.url + "\n")
         except AttributeError:
             file4.write(o.title + "\n")
-        file3.write(")\n")
+        file3.write(")  \n")
         file3.write(o.outline + "……")
         file3.write("\n\n")
     file3.close()
     file4.close()
+
+
+def get():
+    # run the function to get the information from the school website
+    getSchooljwc()
+    getschoolpe()
     # get the information from WeChat Official Account
     driver.get("https://mp.weixin.qq.com")
     try:
@@ -631,11 +636,11 @@ def get():
                 file3.write("](")
             try:
                 file3.write(o.url)
-                file3.write(")\n")
+                file3.write(")  \n")
             except AttributeError:
-                file3.write(")\n")
+                file3.write(")  \n")
             except TypeError:
-                file3.write(")\n")
+                file3.write(")  \n")
             try:
                 file3.write(o.outline + "……")
             except UnicodeEncodeError:
