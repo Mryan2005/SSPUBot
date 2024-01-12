@@ -5,6 +5,10 @@ project to finish the Second Classroom. In my mind, it can gather information ab
 solve the problem of my school, and some day I will let it be able to be used in every area. I think it will be very
 interesting.
 
+## Badges
+
+[![codebeat badge](https://codebeat.co/badges/ee301aae-3252-4023-bf5a-6b967e54d8e6)](https://codebeat.co/projects/github-com-mryan2005-sspu-bot-main)
+
 ## How to use it?
 
 ### 1. Install the package
