@@ -7,7 +7,7 @@ interesting.
 
 ## Badges
 
-[![codebeat badge](https://codebeat.co/badges/ee301aae-3252-4023-bf5a-6b967e54d8e6)](https://codebeat.co/projects/github-com-mryan2005-sspu-bot-main)
+[![codebeat badge](https://codebeat.co/badges/3b87724b-fee1-43d4-8eba-a08c6a744881)](https://codebeat.co/projects/github-com-mryan2005-sspu-bot-main)
 
 ## How to use it?
 
