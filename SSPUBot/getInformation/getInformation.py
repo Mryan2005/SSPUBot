@@ -6,6 +6,7 @@ import pickle
 import sys
 import time
 import urllib.request
+import json
 
 import selenium
 import win32api
@@ -17,12 +18,12 @@ from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 
 try:
-    import SSPUBot.settings.settings as settings
-except ModuleNotFoundError:
-    from ..settings import settings
+    settings = json.load(open("../settings/settings.json", "r", encoding="utf-8"))
+except FileNotFoundError:
+    print("settings.json not found")
+    sys.exit(1)
 
 # read the settings
-settings = settings.user
 
 # define the driver
 ser = Service()
