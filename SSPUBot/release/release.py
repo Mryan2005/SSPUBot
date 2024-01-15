@@ -7,13 +7,13 @@ import requests
 s = json.load(open("../settings/settings.json", "r", encoding="utf-8"))
 
 
-def release(Url, Username, Password, title, content):
+def release(Url, token, title, content):
     session = requests.Session()
     responses = session.get(Url)
     head = {
         "Accept": "application/vnd.api+json",
         "Content-Type": "application/vnd.api+json",
-        "Authorization": "Token " + s["token"]
+        "Authorization": "Token " + token
     }
     data = {
         "data": {
@@ -43,4 +43,4 @@ if __name__ == "__main__":
     # content = file.read()
     # file.close()
     content = "test"
-    release(s["url"], s["username"], s["password"], "test", content)
+    release(s["url"], s["token"], "test", content)
