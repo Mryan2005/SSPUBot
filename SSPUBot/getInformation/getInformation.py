@@ -592,10 +592,13 @@ def get():
         GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
         # check the posts, if url in havereleased.log, then delete it
-        file4 = open("./havereleased.log", "r", encoding="gb2312")
+        try:
+            file4 = open("./havereleased.log", "r+", encoding="gb2312")
+        except FileNotFoundError:
+            file4 = open("./havereleased.log", "w+", encoding="gb2312")
         havereleased = file4.readlines()
         file4.close()
-        file4 = open("./havereleased.log", "a")
+        file4 = open("./havereleased.log", "a+")
         flag = 1
         while flag == 1:
             flag = 0
