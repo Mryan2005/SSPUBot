@@ -580,10 +580,7 @@ def getschoolpe():
     file4.close()
 
 
-def get():
-    # run the function to get the information from the school website
-    getSchooljwc()
-    getschoolpe()
+def getOfficialAccount():
     # get the information from WeChat Official Account
     driver.get("https://mp.weixin.qq.com")
     try:
@@ -657,6 +654,14 @@ def get():
         file3.close()
         # close the browser
         driver.quit()
+
+
+def get():
+    # run the function to get the information from the school website
+    getSchooljwc()
+    getschoolpe()
+    # run the function to get the information from the official account
+    getOfficialAccount()
 
 
 if __name__ == "__main__":
