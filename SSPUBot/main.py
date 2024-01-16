@@ -29,7 +29,7 @@ def run():
     for i in posts[:]:
         if i.url + "\n" in oldPostList and i.url + '\n' in oldPostList:
             continue
-        r.release(s["url"], s["token"], i.title, i.outline, i.url, True)
+        r.release(s["url"], s["token"], i.title, i.outline, i.url, False)
         if i.url != "":
             oldPosts.write(i.url + "\n")
         else:
