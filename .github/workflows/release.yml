@@ -1,5 +1,9 @@
 name: Build pip Package
-on: [ push ]
+on:
+  push:
+    tags:
+      - V*
+      - v*
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,5 +50,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./dist.zip
-          asset_name: pip-package
+          asset_name: pip-package.zip
           asset_content_type: application/zip
