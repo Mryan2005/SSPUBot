@@ -2,13 +2,14 @@
 try:
     from getInformation import getInformation as g
     from release import release as r
-    from settings import settings as s
 except ModuleNotFoundError:
     from SSPUBot.getInformation import getInformation as g
     from SSPUBot.release import release as r
-    from SSPUBot.settings import settings as s
 finally:
     import datetime
+    import json
+
+s = json.load(open("settings/settings.json", "r", encoding="utf-8"))
 
 
 # define the function to run the bot
@@ -51,7 +52,7 @@ def run():
         # get the date and time of releasing
         releasingTime = datetime.datetime.now()
         # release the result
-        r.release(s.user["url"], s.user["username"], s.user["password"], releasingTime, content)
+        r.release(s["url"], s["username"], s["password"], releasingTime, content)
 
 
 # run the bot if this file is the main file
