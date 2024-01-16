@@ -2,12 +2,13 @@
 # Path: SSPUBot/getInformation/getInformation.py
 # Compare this snippet from SSPUBot/release/release.py:
 import io
+import os
 import pickle
 import sys
 import time
 import urllib.request
 import json
-
+import logging
 import selenium
 import win32api
 import win32con
@@ -17,16 +18,26 @@ from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="log.txt", filemode='a+')  # 日志配置
+
 try:
-    settings = json.load(open("../settings/settings.json", "r", encoding="utf-8"))
+    logging.info("正在读取设置")
+    settings = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
+    logging.info("读取设置成功")
 except FileNotFoundError:
-    settings = json.load(open("./settings/settings.json", "r", encoding="utf-8"))
+    logging.error("读取设置失败, 正在寻找其他地方")
+    settings = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
+    logging.info("读取设置成功")
 
 # read the settings
 
 # define the driver
+logging.info("正在启动浏览器")
 ser = Service()
-ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
+if platform.system() == "Windows":
+    ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
+elif platform.system() == "Linux":
+    ser.path = '/usr/bin/geckodriver'
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
@@ -34,6 +45,7 @@ if sys.argv[0] == 'normal':
     firefox_options.add_argument("-headless")
 elif sys.argv[0] == 'test':
     pass
+logging.info("正在启动浏览器Firefox")
 driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
@@ -91,15 +103,9 @@ def is_word_which_i_need(chars):
 
 # define the login function
 def login():
-    neededThings = ["name", "value", "domain", "path", "expiry", "secure", "httpOnly", "sameSite", "priority",
-                    "sameParty", "sourceScheme", "sourcePort", "sourcePriority", "isSameSite", "isSameParty",
-                    "isSecure",
-                    "isHttpOnly", "isHostOnly", "isSession", "isPersistent", "isExpired", "isSecureContext",
-                    "isFirstPartyOnly", "sameSiteStatus", "samePartyStatus", "priorityValue", "sourcePriorityValue",
-                    "sameSiteValue", "samePartyValue", "priorityValue", "sourcePriorityValue", "sameSiteValue",
-                    "samePartyValue", "domain"]
     try:
         # login with cookies
+        logging.info("正在读取cookies")
         cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
         for cookie in cookies:
             if isinstance(cookie.get('expiry'), float):
@@ -109,7 +115,9 @@ def login():
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
         if len(writeafile) == 0:
             MakeError()
+            logging.warning("cookies没有内容，正在重新登录")
     except FileNotFoundError:
+        logging.warning("cookies文件不存在，正在重新登录")
         # login with username and password
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")
         LoginTag.click()
@@ -119,7 +127,10 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        time.sleep(60)
+        driver.get_full_page_screenshot_as_png()
+        os.system("move screenshot.png ./data/screenshot.png")
+        logging.info("正在等待扫码码")
+        time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
@@ -132,6 +143,7 @@ def login():
                 cookie['expiry'] = int(cookie['expiry'])
             driver.add_cookie(cookie)
     except notLoginError or IndexError:
+        logging.warning("cookies失效，正在重新登录")
         # login with username and password if the cookies are wrong
         driver.delete_all_cookies()
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"login__type__container__select-type\"]")
@@ -142,8 +154,10 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        win32api.MessageBox(0, "请扫码登录", "提醒", win32con.MB_OK)
-        time.sleep(60)
+        driver.get_full_page_screenshot_as_png()
+        os.system("move screenshot.png ./data/screenshot.png")
+        logging.info("正在等待扫码码")
+        time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
@@ -162,6 +176,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     openingTag = []
 
     try:
+        logging.info("正在创建新的图文消息")
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     except selenium.common.exceptions.NoSuchElementException:
         time.sleep(30)
@@ -170,20 +185,25 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         writeafile[0].click()
     time.sleep(5)
     windows = driver.window_handles
+    logging.info("正在选择图文消息的标签页")
     driver.switch_to.window(windows[-1])
     time.sleep(3)
 
     try:
+        logging.info("正在选择内链")
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
     except selenium.common.exceptions.NoSuchElementException:
+        logging.warning("网站未加载完成，正在等待30秒")
         time.sleep(30)
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
     finally:
+        logging.info("正在点击内链")
         openingTag.click()
         time.sleep(3)
 
     del driver.requests
-
+    # get the url of the official account
+    logging.info("正在获取公众号的url")
     openingTag = driver.find_elements(By.XPATH, "//button[@class=\"weui-desktop-btn weui-desktop-btn_default\"]")
     openingTag[0].click()
     inputtingTag = driver.find_elements(By.XPATH, "//input[@class=\"weui-desktop-form__input\"]")
@@ -202,6 +222,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 if not ('&query=&fakeid=&' in i.url):
                     url = i.url
                     break
+    logging.info("正在获取公众号的url成功, url为" + url+ ", 正在获取公众号的文章")
     driver.get(url)
     time.sleep(3)
     # get the information of the official account
@@ -242,8 +263,8 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 text = ''
         if flag == 4:
             flag = 0
+    logging.info("获取公众号的文章成功")
     # get the outline of the post
-    file3 = open("./result.md", "a")
     for g in posts[lastpart + 1:]:
         try:
             url = g.url
@@ -253,8 +274,10 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         try:
             time.sleep(3)
             try:
+                logging.info("正在进入文章的url")
                 driver.get(url)
             except selenium.common.exceptions.InvalidArgumentException:
+                logging.warning("网页不支持打开")
                 g.setOutline("由于网页不支持打开，请到该站点查看")
             try:
                 time.sleep(3)
@@ -263,6 +286,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 time.sleep(30)
                 outlines = driver.find_elements(By.XPATH, "//section")
             try:
+                logging.info("正在获取文章的概要")
                 outline = outlines[0].text[:]
                 g.setOutline(outline)
             except selenium.common.exceptions.StaleElementReferenceException:
@@ -271,8 +295,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 g.setOutline("可能内容被删除了，或者这是张图片")
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
-    # write the account name to the file
-    file3.write("## " + accountName + "\n\n")
+        logging.info("获取文章的概要完成")
     for g in posts[lastpart + 1:]:
         outline = g.outline
         outline = outline.replace("\n", " ")
@@ -280,7 +303,9 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         outline = outline.replace("²", "平方")
         g.setOutline(outline)
     # close the page, select the first page and refresh the page.
+    logging.info("正在关闭页面")
     driver.close()
+    logging.info("正在切换到第一个页面")
     windows = driver.window_handles
     driver.switch_to.window(windows[0])
     driver.refresh()
@@ -294,6 +319,7 @@ def getSchooljwc():
     flag1 = 0
     k = -1
     # get the information from the school website which is "jwc.sspu.edu.cn"
+    logging.info("正在获取教务处的信息")
     res = urllib.request.urlopen('https://jwc.sspu.edu.cn/897/list.htm')
     htmlBytes = res.read()
     websiteResultList = open('website.html', 'wb')
@@ -306,6 +332,7 @@ def getSchooljwc():
     texts = file.readlines()
     file.close()
     # get the title and the url of the post ---- start
+    logging.info("正在获取教务处的标题和url")
     for i in texts:
         if '<ul class="news_list list2">' in i.decode("utf8") and flag == 0:
             flag = 1
@@ -331,6 +358,7 @@ def getSchooljwc():
     file2.close()
     # get the title and the url of the post ---- end
     # get the outline of the post ---- start
+    logging.info("正在获取教务处文件的概要")
     text = ''
     file = open('result.txt', 'r')
     for i in file.readlines():
@@ -382,6 +410,7 @@ def getSchooljwc():
             if flag == 8:
                 flag = 0
                 break
+    logging.info("获取教务处文件的概要成功，正在获取教务处文件")
     for g in posts:
         url = g.url
         try:
@@ -396,6 +425,7 @@ def getSchooljwc():
 
 def getschoolpe():
     # get the information from the school website which is "pe2016.sspu.edu.cn"
+    logging.info("正在获取体育部的信息")
     # define some values ---- start
     lastpart = len(posts) - 1
     text = ''
@@ -403,6 +433,7 @@ def getschoolpe():
     flag1 = 0
     # define some values ---- end
     # get the title and the url of the post
+    logging.info("正在获取体育部的标题和url")
     res = urllib.request.urlopen('https://pe2016.sspu.edu.cn/342/list.htm')
     htmlBytes = res.read()
     websiteResultList = open('website.html', 'wb')
@@ -438,6 +469,7 @@ def getschoolpe():
                                 flag1 = 0
     file2.close()
     # get the outline of the post
+    logging.info("正在获取体育部文件的概要")
     text = ''
     flag = 0
     k = lastpart
@@ -492,6 +524,7 @@ def getschoolpe():
                 flag = 0
                 break
         file.close()
+    logging.info("获取体育部文件的概要成功，正在获取体育部文件")
     for g in posts[lastpart + 1:]:
         url = g.url
         try:
@@ -508,13 +541,18 @@ def getschoolpe():
 
 def getOfficialAccount():
     # get the information from WeChat Official Account
+    logging.info("正在获取公众号的信息")
     driver.get("https://mp.weixin.qq.com")
     try:
+        logging.info("正在登录公众号")
         login()
     finally:
+        logging.info("正在获取青春二工大的文章")
         GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
+        logging.info("正在获取上海第二工业大学学生事务中心的文章")
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
         # close the browser
+        logging.info("正在关闭浏览器")
         driver.quit()
 
 
