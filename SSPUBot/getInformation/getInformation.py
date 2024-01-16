@@ -523,7 +523,7 @@ def get():
     getSchooljwc()
     getschoolpe()
     # run the function to get the information from the official account
-    #getOfficialAccount()
+    getOfficialAccount()
 
 
 if __name__ == "__main__":
