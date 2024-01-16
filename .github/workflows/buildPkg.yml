@@ -22,9 +22,3 @@ jobs:
         with:
           name: pip-package
           path: dist/
-      - name: Create a release and upload pip package
-        if: github.event.pull_request.merged == true
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: dist/*
-          token: ${{ secrets.TOKEN }}
