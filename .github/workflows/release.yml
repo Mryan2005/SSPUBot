@@ -1,5 +1,9 @@
 name: Build pip Package
-on: [ push ]
+on:
+  push:
+    tags:
+      - V*
+      - v*
 jobs:
   build:
     runs-on: ubuntu-latest
