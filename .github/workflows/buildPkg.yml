@@ -22,17 +22,9 @@ jobs:
         with:
           name: pip-package
           path: dist/
-      - name: Create a release
+      - name: Create a release and upload pip package
         if: github.event.pull_request.merged == true
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-            tag_name: ${{ github.build.id }}
-            release_name: Release ${{ github.build.id }}
-            body: |
-                Changes in this Release
-                - Added a new feature
-                - Fixed a bug
-            draft: false
-            prerelease: false
+          artifacts: dist/*
+          token: ${{ secrets.GITHUB_TOKEN }}
