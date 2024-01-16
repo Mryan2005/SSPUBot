@@ -5,4 +5,5 @@ WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
 COPY ./Firefox/geckodriver /usr/bin/geckodriver
+WORKDIR /SSPUBot
 CMD python3 main.py
