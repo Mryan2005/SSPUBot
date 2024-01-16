@@ -20,8 +20,7 @@ from seleniumwire.webdriver import Firefox
 try:
     settings = json.load(open("../settings/settings.json", "r", encoding="utf-8"))
 except FileNotFoundError:
-    print("settings.json not found")
-    sys.exit(1)
+    settings = json.load(open("./settings/settings.json", "r", encoding="utf-8"))
 
 # read the settings
 
@@ -264,7 +263,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 time.sleep(30)
                 outlines = driver.find_elements(By.XPATH, "//section")
             try:
-                outline = outlines[0].text[:200]
+                outline = outlines[0].text[:]
                 g.setOutline(outline)
             except selenium.common.exceptions.StaleElementReferenceException:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
@@ -388,51 +387,11 @@ def getSchooljwc():
         try:
             driver.get(url)
             outline = driver.find_element(By.XPATH, "//div[@class=\"WordSection1\"]")
-            outline = outline.text[:200]
+            outline = outline.text[:]
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
     # get the outline of the post ---- end
-    # check the posts, if url in havereleased.log, then delete it ---- start
-    try:
-        file4 = open("./havereleased.log", "r+")
-    except FileNotFoundError:
-        file4 = open("./havereleased.log", "w+")
-    havereleased = file4.readlines()
-    file4.close()
-    file4 = open("./havereleased.log", "a")
-    flag = 1
-    while flag == 1:
-        flag = 0
-        for o in posts:
-            try:
-                if o.url + "\n" in havereleased:
-                    posts.remove(o)
-                    flag = 1
-            except AttributeError:
-                if o.title + "\n" in havereleased:
-                    posts.remove(o)
-                    flag = 1
-    for o in posts:
-        try:
-            file4.write(o.url + "\n")
-        except AttributeError:
-            file4.write(o.title + "\n")
-    file4.close()
-    # check the posts, if url in havereleased.log, then delete it ---- end
-    # write the posts to the file ---- start
-    file3 = open("./result.md", "w")
-    file3.write("## 教务处通知\n\n")
-    for o in posts:
-        file3.write("[")
-        file3.write(o.title)
-        file3.write("](")
-        file3.write(o.url)
-        file3.write(")  \n")
-        file3.write(o.outline + "……")
-        file3.write("\n\n")
-    file3.close()
-    # write the posts to the file ---- end
 
 
 def getschoolpe():
@@ -541,44 +500,10 @@ def getschoolpe():
                 continue
             driver.get(url)
             outline = driver.find_element(By.XPATH, "//div[@class=\"wp_articlecontent\"]")
-            outline = outline.text[:200]
+            outline = outline.text[:]
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
-    file3 = open("./result.md", "a")
-    file3.write("## 体育部通知\n\n")
-    # check the posts, if url in havereleased.log, then delete it
-    file4 = open("./havereleased.log", "r")
-    havereleased = file4.readlines()
-    file4.close()
-    file4 = open("./havereleased.log", "a")
-    flag = 1
-    while flag == 1:
-        flag = 0
-        for o in posts:
-            try:
-                if o.url + "\n" in havereleased:
-                    posts.remove(o)
-                    flag = 1
-            except AttributeError:
-                if o.title + "\n" in havereleased:
-                    posts.remove(o)
-                    flag = 1
-    # write the posts to the file
-    for o in posts:
-        file3.write("[")
-        file3.write(o.title)
-        file3.write("](")
-        file3.write(o.url)
-        try:
-            file4.write(o.url + "\n")
-        except AttributeError:
-            file4.write(o.title + "\n")
-        file3.write(")  \n")
-        file3.write(o.outline + "……")
-        file3.write("\n\n")
-    file3.close()
-    file4.close()
 
 
 def getOfficialAccount():
@@ -589,70 +514,6 @@ def getOfficialAccount():
     finally:
         GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
-        # check the posts, if url in havereleased.log, then delete it
-        try:
-            file4 = open("./havereleased.log", "r+", encoding="gb2312")
-        except FileNotFoundError:
-            file4 = open("./havereleased.log", "w+", encoding="gb2312")
-        havereleased = file4.readlines()
-        file4.close()
-        file4 = open("./havereleased.log", "a+")
-        flag = 1
-        while flag == 1:
-            flag = 0
-            for o in posts:
-                try:
-                    if o.url + "\n" in havereleased:
-                        posts.remove(o)
-                        flag = 1
-                except AttributeError:
-                    if o.title + "\n" in havereleased:
-                        posts.remove(o)
-                        flag = 1
-                except TypeError:
-                    if o.title + "\n" in havereleased:
-                        posts.remove(o)
-                        flag = 1
-        for o in posts:
-            try:
-                file4.write(o.url + "\n")
-            except AttributeError:
-                file4.write(o.title + "\n")
-            except TypeError:
-                file4.write(o.title + "\n")
-        file4.close()
-        # write the posts to the file
-        file3 = open("./result.md", "a")
-        for o in posts:
-            file3.write("[")
-            try:
-                file3.write(o.title)
-                file3.write("](")
-            except UnicodeEncodeError:
-                text1 = ""
-                for i in o.title:
-                    if is_word_which_i_need(i):
-                        text1 += i
-                file3.write(text1)
-                file3.write("](")
-            try:
-                file3.write(o.url)
-                file3.write(")  \n")
-            except AttributeError:
-                file3.write(")  \n")
-            except TypeError:
-                file3.write(")  \n")
-            try:
-                file3.write(o.outline + "……")
-            except UnicodeEncodeError:
-                text = ''
-                for i in o.outline:
-                    if is_word_which_i_need(i):
-                        text += i
-                file3.write(text + "……")
-            file3.write("\n\n")
-        # write the posts to the file ---- end
-        file3.close()
         # close the browser
         driver.quit()
 
@@ -662,7 +523,7 @@ def get():
     getSchooljwc()
     getschoolpe()
     # run the function to get the information from the official account
-    getOfficialAccount()
+    #getOfficialAccount()
 
 
 if __name__ == "__main__":
