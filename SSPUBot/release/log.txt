@@ -1,0 +1,7 @@
+2024-01-16 15:41:32,944 - root - INFO - Release start!
+2024-01-16 15:41:32,944 - root - INFO - 正在尝试连接到服务器...
+2024-01-16 15:41:35,334 - root - INFO - 现在是测试模式
+2024-01-16 15:41:36,562 - root - INFO - Releasetest github.com/SSPUBot/SSPUBot success!
+2024-01-16 15:41:36,562 - root - INFO - Release end!
+2024-01-16 16:47:11,584 - root - INFO - Release start!
+2024-01-16 16:47:11,585 - root - INFO - 正在尝试连接到服务器...

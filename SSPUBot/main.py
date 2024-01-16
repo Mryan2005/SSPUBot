@@ -9,7 +9,7 @@ finally:
     import datetime
     import json
 
-s = json.load(open("./settings/settings.json", "r", encoding="utf-8"))
+s = json.load(open("data/settings/settings.json", "r", encoding="utf-8"))
 
 
 # define the function to run the bot
@@ -27,9 +27,9 @@ def run():
         oldPosts = open("./data/haveReleased.sspubot", "w", encoding="utf-8")
         oldPostList = []
     for i in posts[:]:
-        if i.url + "\n" in oldPostList and i.url + '\n' in oldPostList:
+        if str(i.url) + "\n" in oldPostList and str(i.title) + '\n' in oldPostList:
             continue
-        r.release(s["url"], s["token"], i.title, i.outline, i.url, False)
+        r.release(s["url"], s["token"], i.title, i.outline, i.url, True)
         if i.url != "":
             oldPosts.write(i.url + "\n")
         else:
