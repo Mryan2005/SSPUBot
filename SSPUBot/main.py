@@ -2,13 +2,14 @@
 try:
     from getInformation import getInformation as g
     from release import release as r
-    from settings import settings as s
 except ModuleNotFoundError:
     from SSPUBot.getInformation import getInformation as g
     from SSPUBot.release import release as r
-    from SSPUBot.settings import settings as s
 finally:
     import datetime
+    import json
+
+s = json.load(open("./settings/settings.json", "r", encoding="utf-8"))
 
 
 # define the function to run the bot
@@ -18,40 +19,22 @@ def run():
     count = 0
     noNotice = []
     g.get()
-    file = open("result.md", "r")
-    contents = file.readlines()
-    file.close()
-    # check the result.md
-    for i in contents:
-        if '## ' in i and flag == 0:
-            flag = 1
+    posts = g.posts
+    try:
+        oldPosts = open("./data/haveReleased.sspubot", "r+", encoding="utf-8")
+        oldPostList = oldPosts.readlines()
+    except FileNotFoundError:
+        oldPosts = open("./data/haveReleased.sspubot", "w", encoding="utf-8")
+        oldPostList = []
+    for i in posts[:]:
+        if i.url + "\n" in oldPostList and i.url + '\n' in oldPostList:
             continue
-        if flag == 1:
-            if "\n" == i:
-                flag = 2
-                continue
-        if flag == 2:
-            if "## " in i:
-                noNotice.append(1)
-                flag = 3
-            else:
-                noNotice.append(0)
-                flag = 0
-            if "## " in i and contents.index(i) + 1 == len(contents):
-                noNotice.append(1)
-        if flag == 3:
-            flag = 1
-    for i in noNotice:
-        if i == 1:
-            count += 1
-    if count != len(noNotice):
-        file = open("result.md", "r")
-        content = file.read()
-        file.close()
-        # get the date and time of releasing
-        releasingTime = datetime.datetime.now()
-        # release the result
-        r.release(s.user["url"], s.user["username"], s.user["password"], releasingTime, content)
+        r.release(s["url"], s["token"], i.title, i.outline, i.url, False)
+        if i.url != "":
+            oldPosts.write(i.url + "\n")
+        else:
+            oldPosts.write(i.title + '\n')
+    oldPosts.close()
 
 
 # run the bot if this file is the main file

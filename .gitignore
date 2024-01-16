@@ -19,7 +19,7 @@ taobao_cookies.pkl
 taobao_cookies.txt
 src/1
 cookie.txt
-SSPUBot/settings/settings.py
+SSPUBot/settings/settings.json
 11.py
 dist/
 SSPUBot.egg-info/
@@ -27,3 +27,4 @@ SSPU_Bot.egg-info/
 haverelease.log
 1.py
 havereleased.log
+/SSPUBot/data/haveReleased.sspubot
