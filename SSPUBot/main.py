@@ -1,4 +1,6 @@
 # import some modules
+import time
+
 try:
     from getInformation import getInformation as g
     from release import release as r
@@ -39,4 +41,6 @@ def run():
 
 # run the bot if this file is the main file
 if __name__ == "__main__":
-    run()
+    while True:
+        run()
+        time.sleep(1 * 60 * 30)
