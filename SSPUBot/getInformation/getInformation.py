@@ -18,8 +18,16 @@ from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="log.txt", filemode='a+')  # 日志配置
-
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    filename="log.txt", filemode='a+')  # 日志配置
+ser = Service()
+firefox_options = Options()
+# firefox_options.add_argument('--ignore-certificate-errors')
+# firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
+logging.info("正在启动浏览器Firefox")
+driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
+driver.set_page_load_timeout(30)  # set the time to load the page
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
 try:
     logging.info("正在读取设置")
     settings = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
@@ -33,22 +41,6 @@ except FileNotFoundError:
 
 # define the driver
 logging.info("正在启动浏览器")
-ser = Service()
-if platform.system() == "Windows":
-    ser.path = 'C:\\Users\\A2564\\AppData\\Local\\Programs\\Python\\Python311\\geckodriver.exe'
-elif platform.system() == "Linux":
-    ser.path = '/usr/bin/geckodriver'
-firefox_options = Options()
-# firefox_options.add_argument('--ignore-certificate-errors')
-# firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
-if sys.argv[0] == 'normal':
-    firefox_options.add_argument("-headless")
-elif sys.argv[0] == 'test':
-    pass
-logging.info("正在启动浏览器Firefox")
-driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
-driver.set_page_load_timeout(30)  # set the time to load the page
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
 
 
 # define the classes
@@ -222,7 +214,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 if not ('&query=&fakeid=&' in i.url):
                     url = i.url
                     break
-    logging.info("正在获取公众号的url成功, url为" + url+ ", 正在获取公众号的文章")
+    logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
     driver.get(url)
     time.sleep(3)
     # get the information of the official account
