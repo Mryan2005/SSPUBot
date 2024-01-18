@@ -42,6 +42,5 @@ def run():
 # run the bot if this file is the main file
 if __name__ == "__main__":
     while True:
-        print("Start at " + str(datetime.datetime.now()))
         run()
         time.sleep(1 * 60 * 30)

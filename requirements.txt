@@ -1,7 +1,3 @@
 requests>=2.31.0
 setuptools>=68.0.0
-selenium
-selenium-wire
-wheel
-lxml
-appium-python-client
+selenium>=4.0.0

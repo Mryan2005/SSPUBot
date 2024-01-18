@@ -1,15 +1,10 @@
-FROM selenium/standalone-firefox:latest
+FROM ubuntu:latest
 LABEL authors="Mryan2005"
+RUN apt-get update && apt-get install -y python3.11 python3-pip firefox
 WORKDIR /app
-ADD ./ .
+ADD ./SSPUBot .
 ADD ./requirements.txt .
-RUN sudo apt-get update && sudo apt install libopencv-dev python3-opencv -y && sudo apt-get install -y python3-pip
-RUN sudo pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-RUN sudo pip install -r requirements.txt
-RUN sudo useradd -ms /bin/bash SSPUBot
-RUN sudo chown -R SSPUBot SSPUBot/
-WORKDIR /app/SSPUBot
-USER SSPUBot
-CMD sudo python3 main.py
-
-EXPOSE 4444
+RUN pip install -r requirements.txt
+ADD ./Firefox/geckodriver /usr/bin/geckodriver
+WORKDIR /SSPUBot
+CMD python3 main.py
