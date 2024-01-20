@@ -26,11 +26,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
-firefox_options.add_argument('--headless')
+#firefox_options.add_argument('--headless')
 logging.info("正在启动浏览器Firefox")
 #service = Service('./geckodriver')
 driver: Firefox = webdriver.Firefox(options=firefox_options)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
+driver.set_window_size(1200, 900)
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
 try:
     logging.info("正在读取设置")
@@ -123,9 +124,8 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        QRcode = driver.find_element(By.XPATH, "//img[@class=\"weui-desktop-qrcheck__img js_qrcode\"]")
-        pass
-        QRcode.screenshot_as_png("QRcode.png")
+        time.sleep(10)
+        driver.save_screenshot('1.png')
         time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
@@ -150,10 +150,9 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        QRcode = driver.find_element(By.XPATH, "//img[@class=\"weui-desktop-qrcheck__img js_qrcode\"]")
+        time.sleep(10)
         logging.info("正在等待扫码")
-        print("https://mp.weixin.qq.com" + QRcode)
-        logging.info("https://mp.weixin.qq.com" + QRcode)
+        driver.save_screenshot('1.png')
         logging.info("正在等待扫码码")
         time.sleep(120)
         cookie = driver.get_cookies()
@@ -164,6 +163,9 @@ def login():
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
             driver.add_cookie(cookie)
+        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
+        if len(writeafile) == 0:
+            sys.exit(0)
 
 
 # define the function to get the official account information
