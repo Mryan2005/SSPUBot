@@ -9,6 +9,13 @@ interesting.
 
 [![codebeat badge](https://codebeat.co/badges/3b87724b-fee1-43d4-8eba-a08c6a744881)](https://codebeat.co/projects/github-com-mryan2005-sspu-bot-main)
 
+## which system can use it?
+| System | Can use it? |
+| :----: |:-----------:|
+| Windows |     Yes     |
+| Linux |     No      |
+| MacOS |     No      |
+
 ## How to use it?
 
 ### 1. Install the package
