@@ -21,11 +21,6 @@ ADD ./requirements.txt .
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install -r requirements.txt
 RUN useradd -m sspubot && echo "sspubot:sspubot" | chpasswd && adduser sspubot sudo
-RUN chmod a+x geckodriver
-RUN chmod a+rwx log.txt
-RUN chmod a+rwx data/
-RUN chmod a+rwx website.html
-RUN chmod a+rwx taobao_cookies.pkl
-RUN chmod a+rwx result.txt
+RUN chmod a+rwx .
 USER sspubot
 CMD python3 main.py
