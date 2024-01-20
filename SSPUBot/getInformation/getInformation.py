@@ -18,8 +18,8 @@ from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 from pyvirtualdisplay import Display
 
-display = Display(visible=0, size=(900, 800))
-display.start()	#显示界面的设置
+display = Display(visible=False, size=(900, 800))
+display.start()  # 显示界面的设置
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     filename="log.txt", filemode='w')  # 日志配置
@@ -36,10 +36,17 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the out
 try:
     logging.info("正在读取设置")
     settings = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
-    logging.info("读取设置成功")
 except FileNotFoundError:
-    logging.error("读取设置失败, 正在寻找其他地方")
-    settings = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
+    try:
+        logging.error("读取设置失败, 正在寻找其他地方")
+        settings = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
+        if settings == {}:
+            logging.error("读取设置失败, 正在退出程序")
+            sys.exit(0)
+    except FileNotFoundError:
+        logging.error("读取设置失败, 正在退出程序")
+        sys.exit(0)
+finally:
     logging.info("读取设置成功")
 
 # read the settings
@@ -125,7 +132,7 @@ def login():
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
         time.sleep(10)
-        driver.save_screenshot('1.png')
+        driver.save_screenshot('./data/1.png')
         time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
@@ -152,7 +159,7 @@ def login():
         LoginTag.click()
         time.sleep(10)
         logging.info("正在等待扫码")
-        driver.save_screenshot('1.png')
+        driver.save_screenshot('./data/1.png')
         logging.info("正在等待扫码码")
         time.sleep(120)
         cookie = driver.get_cookies()
