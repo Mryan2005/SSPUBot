@@ -16,20 +16,20 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
-#from pyvirtualdisplay import Display
+from pyvirtualdisplay import Display
 
-#display = Display(visible=0, size=(900, 800))
-#display.start()	#显示界面的设置
+display = Display(visible=0, size=(900, 800))
+display.start()	#显示界面的设置
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     filename="log.txt", filemode='w')  # 日志配置
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
-#firefox_options.add_argument('--headless')
+firefox_options.add_argument('--headless')
 logging.info("正在启动浏览器Firefox")
-#service = Service('./geckodriver')
-driver: Firefox = webdriver.Firefox(options=firefox_options)  # connect to the browser
+service = Service('./geckodriver')
+driver: Firefox = webdriver.Firefox(options=firefox_options, service=service)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
 driver.set_window_size(1200, 900)
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
