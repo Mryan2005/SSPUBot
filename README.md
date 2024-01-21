@@ -36,9 +36,27 @@ then, you need to run the following code in the terminal:
 
 ```shell
 docker build -t sspu-bot .
+```
+
+Pay attention to this thing: you need to add the settings.json file to the data folder of the container.
+then, you need to run the following code in the terminal:
+
+```shell
 docker run -d --name sspu-bot sspu-bot
 ```
 
+or run this following code:
+
+```shell
+docker pull ghcr.io/mryan2005/sspu-bot:latest
+```
+
+Pay attention to this thing: you need to add the settings.json file to the data folder of the container.
+then, you need to run the following code in the terminal:
+
+```shell
+docker run -d --name sspu-bot ghcr.io/mryan2005/sspu-bot:latest
+```
 finally, you need to run the following code in the terminal:
 
 ```shell
