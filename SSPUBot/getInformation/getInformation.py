@@ -9,44 +9,52 @@ import time
 import urllib.request
 import json
 import logging
-from lxml import html
 import selenium
+
+try:
+    if sys.argv[1] == "onDocker":
+        from pyvirtualdisplay import Display
+except IndexError:
+    pass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
-from pyvirtualdisplay import Display
 
-display = Display(visible=False, size=(900, 800))
-display.start()  # 显示界面的设置
-
+try:
+    if sys.argv[1] == "onDocker":
+        display = Display(visible=0, size=(900, 800))
+        display.start()
+except IndexError:
+    pass
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    filename="log.txt", filemode='w')  # 日志配置
+                    filename="log.txt", filemode='a+')  # 日志配置
+try:
+    if sys.argv[1] == "onDocker":
+        ser = Service("./geckodriver")
+except IndexError:
+    ser = Service()
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
-firefox_options.add_argument('--headless')
+try:
+    if sys.argv[1] == "onDocker":
+        firefox_options.add_argument('--headless')
+except IndexError:
+    pass
 logging.info("正在启动浏览器Firefox")
-service = Service('./geckodriver')
-driver: Firefox = webdriver.Firefox(options=firefox_options, service=service)  # connect to the browser
+driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
-driver.set_window_size(1200, 900)
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # set the output encoding
 try:
     logging.info("正在读取设置")
     settings = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
+    logging.info("读取设置成功")
 except FileNotFoundError:
-    try:
-        logging.error("读取设置失败, 正在寻找其他地方")
-        settings = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
-        if settings == {}:
-            logging.error("读取设置失败, 正在退出程序")
-            sys.exit(0)
-    except FileNotFoundError:
-        logging.error("读取设置失败, 正在退出程序")
-        sys.exit(0)
-logging.info("读取设置成功")
+    logging.error("读取设置失败, 正在寻找其他地方")
+    settings = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
+    logging.info("读取设置成功")
 
 # read the settings
 
@@ -130,8 +138,13 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        time.sleep(10)
-        driver.save_screenshot('./data/1.png')
+        logging.info("正在等待扫码码")
+        try:
+            if sys.argv[1] == "onDocker":
+                time.sleep(10)
+                driver.save_screenshot("./data/QRCode.png")
+        except IndexError:
+            pass
         time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
@@ -156,10 +169,13 @@ def login():
         PasswordTag.send_keys(settings["weixinPassword"])
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
-        time.sleep(10)
-        logging.info("正在等待扫码")
-        driver.save_screenshot('./data/1.png')
         logging.info("正在等待扫码码")
+        try:
+            if sys.argv[1] == "onDocker":
+                time.sleep(10)
+                driver.save_screenshot("./data/QRCode.png")
+        except IndexError:
+            pass
         time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
@@ -169,9 +185,6 @@ def login():
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
             driver.add_cookie(cookie)
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if len(writeafile) == 0:
-            sys.exit(0)
 
 
 # define the function to get the official account information
@@ -180,16 +193,14 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     # define some values
     writeafile = []
     openingTag = []
+
     try:
         logging.info("正在创建新的图文消息")
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
     except selenium.common.exceptions.NoSuchElementException:
-        logging.warning("网站未加载完成，正在等待120秒")
-        time.sleep(120)
+        time.sleep(30)
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        logging.info("正在创建新的图文消息")
     finally:
-        logging.info("正在点击新的图文消息")
         writeafile[0].click()
     time.sleep(5)
     windows = driver.window_handles

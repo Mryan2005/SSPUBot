@@ -29,9 +29,14 @@ def run():
         oldPosts = open("./data/haveReleased.sspubot", "w", encoding="utf-8")
         oldPostList = []
     for i in posts[:]:
-        if str(i.url) + "\n" in oldPostList and str(i.title) + '\n' in oldPostList:
+        if str(i.url) + "\n" in oldPostList or str(i.title) + '\n' in oldPostList:
             continue
-        r.release(s["url"], s["token"], i.title, i.outline, i.url, True)
+        post = {
+            "title": i.title,
+            "outline": i.outline,
+            "url": i.url
+        }
+        r.release(s, post, True)
         if i.url != "":
             oldPosts.write(i.url + "\n")
         else:
@@ -41,7 +46,4 @@ def run():
 
 # run the bot if this file is the main file
 if __name__ == "__main__":
-    while True:
-        print("Start at " + str(datetime.datetime.now()))
-        run()
-        time.sleep(1 * 60 * 30)
+    run()
