@@ -21,6 +21,6 @@ ADD ./requirements.txt .
 RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install -r requirements.txt
 RUN useradd -m sspubot && echo "sspubot:sspubot" | chpasswd && adduser sspubot sudo
-RUN chmod a+rwx .
+RUN chmod a+rwx ./ -R
 USER sspubot
 CMD python3 main.py
