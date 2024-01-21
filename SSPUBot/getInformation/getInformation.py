@@ -17,13 +17,25 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
+from pyvirtualdisplay import Display
 
+try:
+    if sys.argv[1] == "onDocker":
+        display = Display(visible=0, size=(900, 800))
+        display.start()
+except IndexError:
+    pass
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     filename="log.txt", filemode='a+')  # 日志配置
 ser = Service()
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
+try:
+    if sys.argv[1] == "onDocker":
+        firefox_options.add_argument('--headless')
+except IndexError:
+    pass
 logging.info("正在启动浏览器Firefox")
 driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
@@ -120,6 +132,12 @@ def login():
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
         logging.info("正在等待扫码码")
+        try:
+            if sys.argv[1] == "onDocker":
+                time.sleep(10)
+                driver.save_screenshot("./data/QRCode.png")
+        except IndexError:
+            pass
         time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
@@ -145,6 +163,12 @@ def login():
         LoginTag = driver.find_element(By.XPATH, "//a[@class=\"btn_login\"]")
         LoginTag.click()
         logging.info("正在等待扫码码")
+        try:
+            if sys.argv[1] == "onDocker":
+                time.sleep(10)
+                driver.save_screenshot("./data/QRCode.png")
+        except IndexError:
+            pass
         time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
