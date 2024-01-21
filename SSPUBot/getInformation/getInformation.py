@@ -10,14 +10,17 @@ import urllib.request
 import json
 import logging
 import selenium
-import win32api
-import win32con
+
+try:
+    if sys.argv[1] == "onDocker":
+        from pyvirtualdisplay import Display
+except IndexError:
+    pass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
-from pyvirtualdisplay import Display
 
 try:
     if sys.argv[1] == "onDocker":
@@ -27,7 +30,11 @@ except IndexError:
     pass
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     filename="log.txt", filemode='a+')  # 日志配置
-ser = Service()
+try:
+    if sys.argv[1] == "onDocker":
+        ser = Service("./geckodriver")
+except IndexError:
+    ser = Service()
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))

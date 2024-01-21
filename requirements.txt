@@ -1,6 +1,5 @@
 requests>=2.31.0
 setuptools>=68.0.0
 selenium>=4.0.0
+pyvirtualdisplay>=3.0
 selenium-wire
-pyvirtualdisplay
-lxml

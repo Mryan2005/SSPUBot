@@ -13,7 +13,7 @@ RUN echo 'export PATH=$PATH:/usr/bin/firefox' >> ./.bash_profile
 RUN apt-get install libgtk-3-dev -y
 RUN apt install libgtk2.0-0 -y
 RUN apt install libasound2 -y
-RUN  apt-get install firefox-locale-zh-hans -y
+RUN apt-get install firefox-locale-zh-hans -y
 RUN firefox --version
 WORKDIR /app
 ADD ./SSPUBot .
@@ -23,4 +23,4 @@ RUN pip install -r requirements.txt
 RUN useradd -m sspubot && echo "sspubot:sspubot" | chpasswd && adduser sspubot sudo
 RUN chmod a+rwx ./ -R
 USER sspubot
-CMD python3 main.py
+CMD ./run.sh
