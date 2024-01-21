@@ -46,8 +46,7 @@ except FileNotFoundError:
     except FileNotFoundError:
         logging.error("读取设置失败, 正在退出程序")
         sys.exit(0)
-finally:
-    logging.info("读取设置成功")
+logging.info("读取设置成功")
 
 # read the settings
 
