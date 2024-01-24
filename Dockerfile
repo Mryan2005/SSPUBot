@@ -3,7 +3,6 @@ MAINTAINER Mryan2005
 LABEL authors="Mryan2005"
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
-RUN apt-get install sudo
 WORKDIR /app
 ADD ./SSPUBot .
 ADD ./requirements.txt .
