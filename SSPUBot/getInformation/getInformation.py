@@ -22,9 +22,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
                     filename="log.txt", filemode='a+')  # 日志配置
 try:
     if sys.argv[1] == "onDocker":
-        ser = Service()
+        ser = Service("./geckodriver")
 except IndexError:
-    ser = Service("./geckodriver")
+    ser = Service()
 firefox_options = Options()
 # firefox_options.add_argument('--ignore-certificate-errors')
 # firefox_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
