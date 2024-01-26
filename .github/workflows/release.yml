@@ -35,8 +35,9 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Changes in this Release
-            - First Release
+            Changes in this Release:
+            - Add a new feature
+            - Fix a bug
           draft: false
           prerelease: false
       - name: zip pip Package
