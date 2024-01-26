@@ -11,23 +11,13 @@ import json
 import logging
 import selenium
 
-try:
-    if sys.argv[1] == "onDocker":
-        from pyvirtualdisplay import Display
-except IndexError:
-    pass
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 
-try:
-    if sys.argv[1] == "onDocker":
-        display = Display(visible=0, size=(900, 800))
-        display.start()
-except IndexError:
-    pass
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     filename="log.txt", filemode='a+')  # 日志配置
 try:
@@ -572,6 +562,9 @@ def getOfficialAccount():
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
         # close the browser
         logging.info("正在关闭浏览器")
+        for handle in driver.window_handles:
+            driver.switch_to.window(handle)
+            driver.close()
         driver.quit()
 
 
