@@ -562,6 +562,9 @@ def getOfficialAccount():
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
         # close the browser
         logging.info("正在关闭浏览器")
+        for handle in driver.window_handles:
+            driver.switch_to.window(handle)
+            driver.close()
         driver.quit()
 
 
