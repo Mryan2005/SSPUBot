@@ -10,16 +10,15 @@ import urllib.request
 import json
 import logging
 import selenium
-
+import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    filename="log.txt", filemode='a+')  # 日志配置
+                    filename="log.txt", filemode='w+')  # 日志配置
 try:
     if sys.argv[1] == "onDocker":
         ser = Service("./geckodriver")
@@ -52,6 +51,48 @@ except FileNotFoundError:
 logging.info("正在启动浏览器")
 
 
+def releaseWechatAccountOverdueNotice():
+    session = requests.Session()
+    logging.info("Release start!")
+    logging.info("正在尝试连接到服务器...")
+    responses = session.get(settings["url"])
+    head = {
+        "Accept": "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+        "Authorization": "Token " + settings["token"]
+    }
+    id = 19
+    data = {
+        "data": {
+            "type": "discussions",
+            "attributes": {
+                "title": "微信公众号登录过期通知",
+                "content": "您的微信公众号登录已经过期"
+            },
+            "relationships": {
+                "tags": {
+                    "data": [
+                        {
+                            "type": "tags",
+                            "id": id
+                        }
+                    ]
+                }
+            }
+        }
+    }
+    responses = session.post(settings["url"] + "/api/discussions", headers=head, json=data)
+    if responses.status_code == 201:
+        print("Release success!")
+        logging.info("Release" + "微信公众号过期通知" + " success!")
+    else:
+        print("Release failed!")
+        print(responses.status_code)
+        logging.error("Release" + "微信公众号过期通知" + " failed!")
+        logging.error(str(responses.status_code) + " " + str(responses.content))
+    logging.info("Release end!")
+
+
 # define the classes
 # define the Error
 class notLoginError(Exception):
@@ -61,6 +102,20 @@ class notLoginError(Exception):
 
     def __str__(self):
         return self.errorinfo
+
+
+class noScanQRCodeError(Exception):
+    def __init__(self):
+        super().__init__(self)
+        self.errorinfo = "没有扫码"
+        driver.close()
+        driver.quit()
+        releaseWechatAccountOverdueNotice()
+        exit(1)
+
+    def __str__(self):
+        return self.errorinfo
+
 
 
 # define the post class
@@ -82,8 +137,12 @@ class Post(object):
 
 
 # define the function to make error
-def MakeError():
+def MakeErrorAboutNoLogin():
     raise notLoginError("如登")
+
+
+def MakeErrorAboutNoScanQRCode():
+    raise noScanQRCodeError()
 
 
 posts = []
@@ -115,7 +174,7 @@ def login():
         driver.refresh()
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
         if len(writeafile) == 0:
-            MakeError()
+            MakeErrorAboutNoLogin()
             logging.warning("cookies没有内容，正在重新登录")
     except FileNotFoundError:
         logging.warning("cookies文件不存在，正在重新登录")
@@ -141,12 +200,7 @@ def login():
         driver.refresh()
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
         if len(writeafile) == 0:
-            MakeError()
-        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
-        for cookie in cookies:
-            if isinstance(cookie.get('expiry'), float):
-                cookie['expiry'] = int(cookie['expiry'])
-            driver.add_cookie(cookie)
+            MakeErrorAboutNoScanQRCode()
     except notLoginError or IndexError:
         logging.warning("cookies失效，正在重新登录")
         # login with username and password if the cookies are wrong
@@ -166,15 +220,12 @@ def login():
                 driver.save_screenshot("./data/QRCode.png")
         except IndexError:
             pass
-        time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
-        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
-        for cookie in cookies:
-            if isinstance(cookie.get('expiry'), float):
-                cookie['expiry'] = int(cookie['expiry'])
-            driver.add_cookie(cookie)
+        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
+        if writeafile.__len__() == 0:
+            MakeErrorAboutNoScanQRCode()
 
 
 # define the function to get the official account information
@@ -183,7 +234,6 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     # define some values
     writeafile = []
     openingTag = []
-
     try:
         logging.info("正在创建新的图文消息")
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
@@ -197,7 +247,6 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     logging.info("正在选择图文消息的标签页")
     driver.switch_to.window(windows[-1])
     time.sleep(3)
-
     try:
         logging.info("正在选择内链")
         openingTag = driver.find_element(By.XPATH, "//li[@id=\"js_editor_insertlink\"]")
@@ -209,7 +258,6 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         logging.info("正在点击内链")
         openingTag.click()
         time.sleep(3)
-
     del driver.requests
     # get the url of the official account
     logging.info("正在获取公众号的url")
@@ -570,8 +618,8 @@ def getOfficialAccount():
 
 def get():
     # run the function to get the information from the school website
-    getSchooljwc()
-    getschoolpe()
+    # getSchooljwc()
+    # getschoolpe()
     # run the function to get the information from the official account
     getOfficialAccount()
 
