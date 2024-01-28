@@ -63,48 +63,6 @@ def release(setting: dict, post: dict, isTest: bool = True):
     logging.info("Release end!")
 
 
-def releaseWechatAccountOverdueNotice():
-    session = requests.Session()
-    logging.info("Release start!")
-    logging.info("正在尝试连接到服务器...")
-    responses = session.get(s["url"])
-    head = {
-        "Accept": "application/vnd.api+json",
-        "Content-Type": "application/vnd.api+json",
-        "Authorization": "Token " + s["token"]
-    }
-    id = 19
-    data = {
-        "data": {
-            "type": "discussions",
-            "attributes": {
-                "title": "微信公众号登录过期通知",
-                "content": "您的微信公众号登录已经过期"
-            },
-            "relationships": {
-                "tags": {
-                    "data": [
-                        {
-                            "type": "tags",
-                            "id": id
-                        }
-                    ]
-                }
-            }
-        }
-    }
-    responses = session.post(s["url"] + "/api/discussions", headers=head, json=data)
-    if responses.status_code == 201:
-        print("Release success!")
-        logging.info("Release" + "微信公众号过期通知" + " success!")
-    else:
-        print("Release failed!")
-        print(responses.status_code)
-        logging.error("Release" + "微信公众号过期通知" + " failed!")
-        logging.error(str(responses.status_code) + " " + str(responses.content))
-    logging.info("Release end!")
-
-
 if __name__ == "__main__":
     # file = open("result.md", "r")
     # outline = file.read()
