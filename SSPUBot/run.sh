@@ -7,4 +7,5 @@ do
     python3 main.py onDocker
     sleep 35m
     pkill -9 firefox
+    pkill -9 firefox-bin
 done
