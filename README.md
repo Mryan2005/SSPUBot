@@ -25,7 +25,7 @@ then, you need to write the following code in the `settings.json` file:
 
 ```json
 {
-  "url": "the url which you want to send the message to",
+  "url": "the url of freeforum which you want to send the message to",
   "token": "token",
   "weixinUsername": "your Weixin Official Account username",
   "weixinPassword": "your Weixin Official Account password"
