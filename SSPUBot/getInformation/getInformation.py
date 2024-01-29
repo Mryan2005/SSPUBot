@@ -249,6 +249,9 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
             settingsNew = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
         settingsNew["isLogin"] = False
         json.dump(settingsNew, open("./data/settings/settings.json", "w", encoding="utf-8"))
+        if sys.argv[1] == "onDocker":
+            os.system("pkill -9 firefox")
+            os.system("pkill -9 firefox-bin")
     time.sleep(5)
     windows = driver.window_handles
     logging.info("正在选择图文消息的标签页")
