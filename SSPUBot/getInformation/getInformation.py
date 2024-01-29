@@ -240,8 +240,15 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     except selenium.common.exceptions.NoSuchElementException:
         time.sleep(30)
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-    finally:
+    try:
         writeafile[0].click()
+    except IndexError:
+        try:
+            settingsNew = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
+        except FileNotFoundError:
+            settingsNew = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
+        settingsNew["isLogin"] = False
+        json.dump(settingsNew, open("./data/settings/settings.json", "w", encoding="utf-8"))
     time.sleep(5)
     windows = driver.window_handles
     logging.info("正在选择图文消息的标签页")
