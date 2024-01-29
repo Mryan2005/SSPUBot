@@ -1,4 +1,5 @@
 # import some modules
+import sys
 import time
 
 try:
@@ -48,3 +49,8 @@ def run():
 if __name__ == "__main__":
     if s["isLogin"]:
         run()
+    else:
+        if sys.argv[1] == "onDocker":
+            os.system("pkill -f 'firefox'")
+            os.system("pkill -f 'geckodriver'")
+            os.system("pkill -f 'firefox-bin'")
