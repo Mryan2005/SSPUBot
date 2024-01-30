@@ -108,10 +108,7 @@ class noScanQRCodeError(Exception):
     def __init__(self):
         super().__init__(self)
         self.errorinfo = "没有扫码"
-        driver.close()
-        driver.quit()
         releaseWechatAccountOverdueNotice()
-        exit(1)
 
     def __str__(self):
         return self.errorinfo
@@ -198,9 +195,6 @@ def login():
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if len(writeafile) == 0:
-            MakeErrorAboutNoScanQRCode()
     except notLoginError or IndexError:
         logging.warning("cookies失效，正在重新登录")
         # login with username and password if the cookies are wrong
@@ -220,12 +214,10 @@ def login():
                 driver.save_screenshot("./data/QRCode.png")
         except IndexError:
             pass
+        time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile.__len__() == 0:
-            MakeErrorAboutNoScanQRCode()
 
 
 # define the function to get the official account information
@@ -240,8 +232,30 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     except selenium.common.exceptions.NoSuchElementException:
         time.sleep(30)
         writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-    finally:
+    try:
         writeafile[0].click()
+    except IndexError:
+        try:
+            settingsNew = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
+            settingsNew["isLogin"] = False
+            json.dump(settingsNew, open("../data/settings/settings.json", "w", encoding="utf-8"))
+            try:
+                if sys.argv[1] == "onDocker":
+                    os.system("pkill -9 firefox")
+                    os.system("pkill -9 firefox-bin")
+            except IndexError:
+                pass
+        except FileNotFoundError:
+            settingsNew = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
+            settingsNew["isLogin"] = False
+            json.dump(settingsNew, open("./data/settings/settings.json", "w", encoding="utf-8"))
+            try:
+                if sys.argv[1] == "onDocker":
+                    os.system("pkill -9 firefox")
+                    os.system("pkill -9 firefox-bin")
+            except IndexError:
+                pass
+        exit(1)
     time.sleep(5)
     windows = driver.window_handles
     logging.info("正在选择图文消息的标签页")
@@ -366,6 +380,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     windows = driver.window_handles
     driver.switch_to.window(windows[0])
     driver.refresh()
+    return 0
 
 
 # define the function to get the information from the school website
@@ -605,7 +620,6 @@ def getOfficialAccount():
         login()
     finally:
         logging.info("正在获取青春二工大的文章")
-        GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
         logging.info("正在获取上海第二工业大学学生事务中心的文章")
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
         # close the browser

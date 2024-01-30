@@ -5,7 +5,9 @@ chmod a+rwx ./data -R
 while true;
 do
     python3 main.py onDocker
-    sleep 35m
+    sleep 10m
     pkill -9 firefox
+    pkill -9 geckodriver
     pkill -9 firefox-bin
+    sleep 35m
 done

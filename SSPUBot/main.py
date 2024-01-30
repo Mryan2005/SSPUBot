@@ -1,4 +1,6 @@
 # import some modules
+import os
+import sys
 import time
 
 try:
@@ -48,4 +50,10 @@ def run():
 
 # run the bot if this file is the main file
 if __name__ == "__main__":
-    run()
+    if s["isLogin"]:
+        run()
+    else:
+        if sys.argv[1] == "onDocker":
+            os.system("pkill -f 'firefox'")
+            os.system("pkill -f 'geckodriver'")
+            os.system("pkill -f 'firefox-bin'")
