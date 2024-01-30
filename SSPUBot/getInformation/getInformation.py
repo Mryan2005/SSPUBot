@@ -108,8 +108,7 @@ class noScanQRCodeError(Exception):
     def __init__(self):
         super().__init__(self)
         self.errorinfo = "没有扫码"
-        # releaseWechatAccountOverdueNotice()
-        exit(1)
+        releaseWechatAccountOverdueNotice()
 
     def __str__(self):
         return self.errorinfo
@@ -192,13 +191,10 @@ def login():
                 driver.save_screenshot("./data/QRCode.png")
         except IndexError:
             pass
-        #time.sleep(120)
+        time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if len(writeafile) == 0:
-            MakeErrorAboutNoScanQRCode()
     except notLoginError or IndexError:
         logging.warning("cookies失效，正在重新登录")
         # login with username and password if the cookies are wrong
@@ -218,13 +214,10 @@ def login():
                 driver.save_screenshot("./data/QRCode.png")
         except IndexError:
             pass
-        #time.sleep(120)
+        time.sleep(120)
         cookie = driver.get_cookies()
         pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
         driver.refresh()
-        writeafile = driver.find_elements(By.XPATH, "//div[@class=\"new-creation__menu-title\"]")
-        if writeafile.__len__() == 0:
-            MakeErrorAboutNoScanQRCode()
 
 
 # define the function to get the official account information
