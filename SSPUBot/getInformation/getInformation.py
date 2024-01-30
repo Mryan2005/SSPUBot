@@ -163,7 +163,7 @@ def login():
     try:
         # login with cookies
         logging.info("正在读取cookies")
-        cookies = pickle.load(open("taobao_cookies.pkl", "rb"))
+        cookies = pickle.load(open("./data/wechat_cookies.pkl", "rb"))
         for cookie in cookies:
             if isinstance(cookie.get('expiry'), float):
                 cookie['expiry'] = int(cookie['expiry'])
@@ -193,7 +193,7 @@ def login():
             pass
         time.sleep(120)
         cookie = driver.get_cookies()
-        pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
+        pickle.dump(cookie, open('./data/wechat_cookies.pkl', 'wb'))
         driver.refresh()
     except notLoginError or IndexError:
         logging.warning("cookies失效，正在重新登录")
@@ -216,7 +216,7 @@ def login():
             pass
         time.sleep(120)
         cookie = driver.get_cookies()
-        pickle.dump(cookie, open('taobao_cookies.pkl', 'wb'))
+        pickle.dump(cookie, open('./data/wechat_cookies.pkl', 'wb'))
         driver.refresh()
 
 
