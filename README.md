@@ -1,13 +1,20 @@
 ## Why I create this project?
 
 When I found out I had to finish the Second Classroom, I thought it would be very crazy, so I decided to develop this
-project to finish the Second Classroom. In my mind, it can gather information about my school-- because I want to let it
+project to finish the Second Classroom. In my mind, it can gather information about my school -- because I want to let it
 solve the problem of my school, and some day I will let it be able to be used in every area. I think it will be very
 interesting.
 
 ## Badges
 
 [![codebeat badge](https://codebeat.co/badges/3b87724b-fee1-43d4-8eba-a08c6a744881)](https://codebeat.co/projects/github-com-mryan2005-sspu-bot-main)
+
+## which system can use it?
+| System  | Can use it? |
+|:-------:|:-----------:|
+| Windows |     Yes     |
+|  Linux  |     Yes     |
+|  MacOS  |     No      |
 
 ## How to use it?
 
@@ -18,7 +25,7 @@ then, you need to write the following code in the `settings.json` file:
 
 ```json
 {
-  "url": "the url which you want to send the message to",
+  "url": "the url of forum which you want to send the message to",
   "token": "token",
   "weixinUsername": "your Weixin Official Account username",
   "weixinPassword": "your Weixin Official Account password"

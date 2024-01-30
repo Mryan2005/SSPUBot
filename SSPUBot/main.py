@@ -31,7 +31,9 @@ def run():
         oldPosts = open("./data/haveReleased.sspubot", "w", encoding="utf-8")
         oldPostList = []
     for i in posts[:]:
-        if str(i.url) + "\n" in oldPostList or str(i.title) + '\n' in oldPostList:
+        if str(i.url) + "\n" in oldPostList:
+            continue
+        elif str(i.title) + '\n' in oldPostList:
             continue
         post = {
             "title": i.title,
