@@ -620,6 +620,7 @@ def getOfficialAccount():
         login()
     finally:
         logging.info("正在获取青春二工大的文章")
+        GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
         logging.info("正在获取上海第二工业大学学生事务中心的文章")
         GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
         # close the browser
