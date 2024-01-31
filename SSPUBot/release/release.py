@@ -11,7 +11,7 @@ try:
 except FileNotFoundError:
     s = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    filename="log.txt", filemode='a+')  # 日志配置
+                    filename="./data/log.txt", filemode='a+')  # 日志配置
 
 
 # setting { url, token }
