@@ -18,7 +18,7 @@ from seleniumwire import webdriver
 from seleniumwire.webdriver import Firefox
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    filename="log.txt", filemode='w+')  # 日志配置
+                    filename="./data/log.txt", filemode='w+')  # 日志配置
 try:
     if sys.argv[1] == "onDocker":
         ser = Service("./geckodriver")
