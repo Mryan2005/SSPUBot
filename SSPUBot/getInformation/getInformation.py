@@ -2,15 +2,16 @@
 # Path: SSPUBot/getInformation/getInformation.py
 # Compare this snippet from SSPUBot/release/release.py:
 import io
+import json
+import logging
 import os
 import pickle
 import sys
 import time
 import urllib.request
-import json
-import logging
-import selenium
+
 import requests
+import selenium
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -640,8 +641,8 @@ def getOfficialAccount():
 
 def get():
     # run the function to get the information from the school website
-    # getSchooljwc()
-    # getschoolpe()
+    getSchooljwc()
+    getschoolpe()
     # run the function to get the information from the official account
     getOfficialAccount()
 
