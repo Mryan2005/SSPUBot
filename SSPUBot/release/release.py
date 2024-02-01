@@ -1,10 +1,8 @@
 # - - coding:utf-8 - -
-import platform
-import sys
-import time
 import json
-import requests
 import logging
+
+import requests
 
 try:
     s = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
@@ -71,6 +69,6 @@ if __name__ == "__main__":
     post = {
         "title": "test",
         "outline": "test",
-        "url": "https://github.com/SSPUBot/SSPUBot"
+        "url": "https://github.com/Mryan2005/SSPUBot"
     }
     release(s, post)
