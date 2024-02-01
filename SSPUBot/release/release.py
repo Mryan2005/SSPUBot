@@ -24,41 +24,78 @@ def release(setting: dict, post: dict, isTest: bool = True):
         "Content-Type": "application/vnd.api+json",
         "Authorization": "Token " + setting["token"]
     }
-    if isTest:
+    if isTest == True:
         logging.info("现在是测试模式")
         id = 19
-    else:
-        logging.info("现在是正式模式")
-        id = 20
-    data = {
-        "data": {
-            "type": "discussions",
-            "attributes": {
-                "title": post["title"],
-                "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
-            },
-            "relationships": {
-                "tags": {
-                    "data": [
-                        {
-                            "type": "tags",
-                            "id": id
-                        }
-                    ]
+        data = {
+            "data": {
+                "type": "discussions",
+                "attributes": {
+                    "title": post["title"],
+                    "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                },
+                "relationships": {
+                    "tags": {
+                        "data": [
+                            {
+                                "type": "tags",
+                                "id": id
+                            }
+                        ]
+                    }
                 }
             }
         }
-    }
-    responses = session.post(setting["url"] + "/api/discussions", headers=head, json=data)
-    if responses.status_code == 201:
-        print("Release success!")
-        logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-    else:
-        print("Release failed!")
-        print(responses.status_code)
-        logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
-        logging.error(str(responses.status_code) + " " + str(responses.content))
-    logging.info("Release end!")
+        responses = session.post(setting["url"] + "/api/discussions", headers=head, json=data)
+        if responses.status_code == 201:
+            print("Release success!")
+            logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
+            res = 1
+        else:
+            print("Release failed!")
+            print(responses.status_code)
+            logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
+            logging.error(str(responses.status_code) + " " + str(responses.content))
+            res = 0
+        logging.info("Release end!")
+    elif isTest == False:
+        logging.info("现在是正式模式")
+        id = 20
+        data = {
+            "data": {
+                "type": "discussions",
+                "attributes": {
+                    "title": post["title"],
+                    "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                },
+                "relationships": {
+                    "tags": {
+                        "data": [
+                            {
+                                "type": "tags",
+                                "id": id
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+        responses = session.post(setting["url"] + "/api/discussions", headers=head, json=data)
+        if responses.status_code == 201:
+            print("Release success!")
+            logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
+            res = 1
+        else:
+            print("Release failed!")
+            print(responses.status_code)
+            logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
+            logging.error(str(responses.status_code) + " " + str(responses.content))
+            res = 0
+        logging.info("Release end!")
+    elif isTest is None:
+        res = 1
+        pass
+    return res
 
 
 if __name__ == "__main__":
