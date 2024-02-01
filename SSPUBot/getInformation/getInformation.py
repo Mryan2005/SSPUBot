@@ -114,7 +114,6 @@ class noScanQRCodeError(Exception):
         return self.errorinfo
 
 
-
 # define the post class
 class Post(object):
     def __init__(self):
@@ -293,12 +292,12 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                 if not ('&query=&fakeid=&' in i.url):
                     url = i.url
                     break
-    if(str(url) == ''):
+    if str(url) == '':
         for handle in driver.window_handles:
             driver.switch_to.window(handle)
-        	driver.close()
+            driver.close()
         driver.quit()
-        logging.error("无法获取url，正在等待下一次运行"）
+        logging.error("无法获取url，正在等待下一次运行")
     logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
     driver.get(url)
     time.sleep(3)
@@ -498,7 +497,9 @@ def getSchooljwc():
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
-    # get the outline of the post ---- end
+
+
+# get the outline of the post ---- end
 
 
 def getschoolpe():
