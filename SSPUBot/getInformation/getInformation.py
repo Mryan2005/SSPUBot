@@ -1,16 +1,18 @@
+# -*- coding: utf-8 -*-
 # Function: get the information from the school website and the official account
 # Path: SSPUBot/getInformation/getInformation.py
 # Compare this snippet from SSPUBot/release/release.py:
 import io
+import json
+import logging
 import os
 import pickle
 import sys
 import time
 import urllib.request
-import json
-import logging
-import selenium
+
 import requests
+import selenium
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -30,6 +32,7 @@ firefox_options = Options()
 try:
     if sys.argv[1] == "onDocker":
         firefox_options.add_argument('--headless')
+        firefox_options.add_argument('--disable-gpu')
 except IndexError:
     pass
 logging.info("正在启动浏览器Firefox")
@@ -46,7 +49,7 @@ except FileNotFoundError:
     logging.info("读取设置成功")
 
 # read the settings
-
+websites = settings["websites"]
 # define the driver
 logging.info("正在启动浏览器")
 
@@ -298,10 +301,10 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                     url = i.url
                     break
     if str(url) == '':
-      driver.close()
-      driver.switch_to.window(windows[0])
-      logging.error("无法获取url，正在等待下一次运行")
-      return 1
+        driver.close()
+        driver.switch_to.window(windows[0])
+        logging.error("无法获取url，正在等待下一次运行")
+        return 1
     logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
     driver.get(url)
     time.sleep(3)
@@ -633,10 +636,9 @@ def getOfficialAccount():
         logging.info("正在登录公众号")
         login()
     finally:
-        logging.info("正在获取青春二工大的文章")
-        GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
-        logging.info("正在获取上海第二工业大学学生事务中心的文章")
-        GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
+        for i in websites:
+            logging.info(("正在获取", i, "的文章"))
+            GetOfficialAccount(i, posts, len(posts) - 1, len(posts) - 1)
         # close the browser
         logging.info("正在关闭浏览器")
         for handle in driver.window_handles:
