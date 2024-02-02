@@ -37,7 +37,7 @@ def run():
         oldPosts = open("./data/haveReleased.sspubot", "r+", encoding="utf-8")
         oldPostList = oldPosts.readlines()
         for i in posts[:]:
-            if checkThisPostIsNew(i, oldPostList) == 1:
+            if checkThisPostIsNew(i, oldPostList):
                 post = {
                     "title": i.title,
                     "outline": i.outline,
