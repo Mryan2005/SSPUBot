@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Function: get the information from the school website and the official account
 # Path: SSPUBot/getInformation/getInformation.py
 # Compare this snippet from SSPUBot/release/release.py:
@@ -34,7 +35,6 @@ try:
         firefox_options.add_argument('--disable-gpu')
 except IndexError:
     pass
-firefox_options.add_experimental_option('excludeSwitches', ['enable-automation'])
 logging.info("正在启动浏览器Firefox")
 driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
@@ -49,7 +49,7 @@ except FileNotFoundError:
     logging.info("读取设置成功")
 
 # read the settings
-
+websites = settings["websites"]
 # define the driver
 logging.info("正在启动浏览器")
 
@@ -636,10 +636,9 @@ def getOfficialAccount():
         logging.info("正在登录公众号")
         login()
     finally:
-        logging.info("正在获取青春二工大的文章")
-        GetOfficialAccount("青春二工大", posts, len(posts) - 1, len(posts) - 1)
-        logging.info("正在获取上海第二工业大学学生事务中心的文章")
-        GetOfficialAccount("上海第二工业大学学生事务中心", posts, len(posts) - 1, len(posts) - 1)
+        for i in websites:
+            logging.info(("正在获取", i, "的文章"))
+            GetOfficialAccount(i, posts, len(posts) - 1, len(posts) - 1)
         # close the browser
         logging.info("正在关闭浏览器")
         for handle in driver.window_handles:
@@ -650,8 +649,8 @@ def getOfficialAccount():
 
 def get():
     # run the function to get the information from the school website
-    getSchooljwc()
-    getschoolpe()
+    # getSchooljwc()
+    # getschoolpe()
     # run the function to get the information from the official account
     getOfficialAccount()
 

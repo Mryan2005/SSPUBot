@@ -22,6 +22,7 @@ cookie.txt
 SSPUBot/data/settings/settings.json
 11.py
 dist/
+/SSPUBot/data/wechat_cookies.pkl
 SSPUBot.egg-info/
 SSPU_Bot.egg-info/
 haverelease.log

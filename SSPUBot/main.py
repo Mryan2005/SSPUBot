@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # import some modules
 import os
 import sys
