@@ -122,6 +122,7 @@ class Post(object):
         self.file = None
         self.url = None
         self.title = None
+        self.source = None
 
     def setTitle(self, title):
         self.title = title
@@ -131,6 +132,9 @@ class Post(object):
 
     def setOutline(self, outline):
         self.outline = outline
+
+    def setSource(self, source):
+        self.source = source
 
 
 # define the function to make error
@@ -285,6 +289,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
     selectingTag = driver.find_elements(By.XPATH, "//li[@class=\"inner_link_account_item\"]")
     selectingTag[0].click()
     # get the url of the official account
+    time.sleep(3)
     requestList = driver.requests
     url = ""
     for i in requestList:
@@ -294,11 +299,10 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                     url = i.url
                     break
     if str(url) == '':
-        for handle in driver.window_handles:
-            driver.switch_to.window(handle)
-            driver.close()
-        driver.quit()
-        logging.error("无法获取url，正在等待下一次运行")
+      driver.close()
+      driver.switch_to.window(windows[0])
+      logging.error("无法获取url，正在等待下一次运行")
+      return 1
     logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
     driver.get(url)
     time.sleep(3)
@@ -379,6 +383,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         outline = outline.replace(" ", " ")
         outline = outline.replace("²", "平方")
         g.setOutline(outline)
+        g.setSource(accountName)
     # close the page, select the first page and refresh the page.
     logging.info("正在关闭页面")
     driver.close()
@@ -498,6 +503,7 @@ def getSchooljwc():
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
+        g.setSource("教务处")
 
 
 # get the outline of the post ---- end
@@ -617,6 +623,7 @@ def getschoolpe():
             g.setOutline(outline)
         except selenium.common.exceptions.NoSuchElementException:
             g.setOutline("由于网页不支持打开，请到该站点查看")
+        g.setSource("体育部")
 
 
 def getOfficialAccount():
