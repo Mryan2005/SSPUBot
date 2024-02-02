@@ -31,8 +31,10 @@ firefox_options = Options()
 try:
     if sys.argv[1] == "onDocker":
         firefox_options.add_argument('--headless')
+        firefox_options.add_argument('--disable-gpu')
 except IndexError:
     pass
+firefox_options.add_experimental_option('excludeSwitches', ['enable-automation'])
 logging.info("正在启动浏览器Firefox")
 driver: Firefox = webdriver.Firefox(options=firefox_options, service=ser)  # connect to the browser
 driver.set_page_load_timeout(30)  # set the time to load the page
@@ -299,10 +301,10 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
                     url = i.url
                     break
     if str(url) == '':
-      driver.close()
-      driver.switch_to.window(windows[0])
-      logging.error("无法获取url，正在等待下一次运行")
-      return 1
+        driver.close()
+        driver.switch_to.window(windows[0])
+        logging.error("无法获取url，正在等待下一次运行")
+        return 1
     logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
     driver.get(url)
     time.sleep(3)

@@ -1,0 +1,43 @@
+2024-02-01 15:27:16,077 - root - INFO - 正在启动浏览器Firefox
+2024-02-01 15:27:16,083 - seleniumwire.storage - INFO - Using default request storage
+2024-02-01 15:27:16,108 - seleniumwire.backend - INFO - Created proxy listening on 127.0.0.1:6707
+2024-02-01 15:27:16,593 - selenium.webdriver.common.selenium_manager - WARNING - The geckodriver version (0.33.0) detected in PATH at C:\Users\A2564\AppData\Local\Programs\Python\Python311\geckodriver.exe might not be compatible with the detected firefox version (122.0.0.8783); currently, geckodriver 0.34.0 is recommended for firefox 122.*, so it is advised to delete the driver in PATH and retry
+2024-02-01 15:27:21,572 - seleniumwire.handler - INFO - Capturing request: http://detectportal.firefox.com/canonical.html
+2024-02-01 15:27:21,631 - seleniumwire.handler - INFO - Capturing response: http://detectportal.firefox.com/canonical.html 200 OK
+2024-02-01 15:27:21,692 - seleniumwire.handler - INFO - Capturing request: https://firefox.settings.services.mozilla.com/v1/buckets/monitor/collections/changes/changeset?collection=query-stripping&bucket=main&_expected=0
+2024-02-01 15:27:21,832 - seleniumwire.handler - INFO - Capturing request: https://firefox.settings.services.mozilla.com/v1/buckets/monitor/collections/changes/changeset?collection=fingerprinting-protection-overrides&bucket=main&_expected=0
+2024-02-01 15:27:21,865 - seleniumwire.handler - INFO - Capturing request: https://firefox.settings.services.mozilla.com/v1/buckets/monitor/collections/changes/changeset?collection=partitioning-exempt-urls&bucket=main&_expected=0
+2024-02-01 15:27:22,015 - root - INFO - 正在读取设置
+2024-02-01 15:27:22,015 - root - WARNING - 读取设置失败, 正在寻找其他地方
+2024-02-01 15:27:22,016 - root - INFO - 读取设置成功
+2024-02-01 15:27:22,016 - root - INFO - 正在启动浏览器
+2024-02-01 15:27:22,150 - seleniumwire.handler - INFO - Capturing response: https://firefox.settings.services.mozilla.com/v1/buckets/monitor/collections/changes/changeset?collection=fingerprinting-protection-overrides&bucket=main&_expected=0 200 
+2024-02-01 15:27:22,159 - seleniumwire.server - INFO - 127.0.0.1:6724: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
+2024-02-01 15:27:22,177 - seleniumwire.handler - INFO - Capturing response: https://firefox.settings.services.mozilla.com/v1/buckets/monitor/collections/changes/changeset?collection=query-stripping&bucket=main&_expected=0 200 
+2024-02-01 15:27:22,289 - seleniumwire.handler - INFO - Capturing request: https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/fingerprinting-protection-overrides/changeset?_expected=1683645166454
+2024-02-01 15:27:22,299 - seleniumwire.handler - INFO - Capturing request: https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/query-stripping/changeset?_expected=1694689843914
+2024-02-01 15:27:22,367 - seleniumwire.handler - INFO - Capturing response: https://firefox.settings.services.mozilla.com/v1/buckets/monitor/collections/changes/changeset?collection=partitioning-exempt-urls&bucket=main&_expected=0 200 
+2024-02-01 15:27:22,375 - seleniumwire.server - INFO - 127.0.0.1:6727: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
+2024-02-01 15:27:22,490 - seleniumwire.handler - INFO - Capturing request: https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/partitioning-exempt-urls/changeset?_expected=1702403047185
+2024-02-01 15:27:22,602 - seleniumwire.handler - INFO - Capturing response: https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/fingerprinting-protection-overrides/changeset?_expected=1683645166454 200 
+2024-02-01 15:27:22,720 - seleniumwire.handler - INFO - Capturing request: https://shavar.services.mozilla.com/downloads?client=navclient-auto-ffox&appver=122.0&pver=2.2
+2024-02-01 15:27:22,774 - seleniumwire.handler - INFO - Capturing response: https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/query-stripping/changeset?_expected=1694689843914 200 
+2024-02-01 15:27:22,962 - seleniumwire.handler - INFO - Capturing response: https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/partitioning-exempt-urls/changeset?_expected=1702403047185 200 
+2024-02-01 15:27:23,147 - seleniumwire.handler - INFO - Capturing request: https://content-signature-2.cdn.mozilla.net/chains/remote-settings.content-signature.mozilla.org-2024-02-29-06-55-22.chain
+2024-02-01 15:27:23,229 - seleniumwire.handler - INFO - Capturing response: https://shavar.services.mozilla.com/downloads?client=navclient-auto-ffox&appver=122.0&pver=2.2 200 OK
+2024-02-01 15:27:23,324 - seleniumwire.handler - INFO - Capturing response: https://content-signature-2.cdn.mozilla.net/chains/remote-settings.content-signature.mozilla.org-2024-02-29-06-55-22.chain 200 
+2024-02-01 15:27:23,354 - seleniumwire.handler - INFO - Capturing request: https://content-signature-2.cdn.mozilla.net/chains/remote-settings.content-signature.mozilla.org-2024-03-20-10-07-03.chain
+2024-02-01 15:27:23,484 - seleniumwire.handler - INFO - Capturing request: https://content-signature-2.cdn.mozilla.net/chains/remote-settings.content-signature.mozilla.org-2024-02-29-06-55-22.chain
+2024-02-01 15:27:23,516 - seleniumwire.handler - INFO - Capturing response: https://content-signature-2.cdn.mozilla.net/chains/remote-settings.content-signature.mozilla.org-2024-03-20-10-07-03.chain 200 
+2024-02-01 15:27:23,528 - seleniumwire.server - INFO - 127.0.0.1:6735: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
+2024-02-01 15:27:23,642 - seleniumwire.handler - INFO - Capturing response: https://content-signature-2.cdn.mozilla.net/chains/remote-settings.content-signature.mozilla.org-2024-02-29-06-55-22.chain 200 
+2024-02-01 15:27:23,650 - seleniumwire.server - INFO - 127.0.0.1:6737: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
+2024-02-01 15:27:24,088 - seleniumwire.handler - INFO - Capturing request: https://tracking-protection.cdn.mozilla.net/ads-track-digest256/1701874128
+2024-02-01 15:27:24,700 - seleniumwire.handler - INFO - Capturing response: https://tracking-protection.cdn.mozilla.net/ads-track-digest256/1701874128 200 
+2024-02-01 15:27:24,725 - seleniumwire.server - INFO - 127.0.0.1:6741: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
+2024-02-01 15:27:25,574 - seleniumwire.handler - INFO - Capturing request: https://tracking-protection.cdn.mozilla.net/social-track-digest256/1700066921
+2024-02-01 15:27:25,957 - seleniumwire.handler - INFO - Capturing response: https://tracking-protection.cdn.mozilla.net/social-track-digest256/1700066921 200 
+2024-02-01 15:27:25,964 - seleniumwire.server - INFO - 127.0.0.1:6744: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
+2024-02-01 15:27:26,776 - seleniumwire.handler - INFO - Capturing request: https://tracking-protection.cdn.mozilla.net/analytics-track-digest256/1701874128
+2024-02-01 15:27:27,280 - seleniumwire.handler - INFO - Capturing response: https://tracking-protection.cdn.mozilla.net/analytics-track-digest256/1701874128 200 
+2024-02-01 15:27:27,297 - seleniumwire.server - INFO - 127.0.0.1:6747: HTTP/2 connection terminated by client: error code: 0, last stream id: 0, additional data: None
