@@ -649,8 +649,8 @@ def getOfficialAccount():
 
 def get():
     # run the function to get the information from the school website
-    # getSchooljwc()
-    # getschoolpe()
+    getSchooljwc()
+    getschoolpe()
     # run the function to get the information from the official account
     getOfficialAccount()
 
