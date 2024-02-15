@@ -47,6 +47,14 @@ except FileNotFoundError:
     logging.warning("读取设置失败, 正在寻找其他地方")
     settings = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
     logging.info("读取设置成功")
+except UnicodeDecodeError:
+    logging.warning("编码错误")
+    try:
+        settings = json.load(open("../data/settings/settings.json", "r", encoding="GBK"))
+        logging.info("读取设置成功")
+    except FileNotFoundError:
+        settings = json.load(open("./data/settings/settings.json", "r", encoding="GBK"))
+        logging.info("读取设置成功")
 
 # read the settings
 websites = settings["websites"]
@@ -384,6 +392,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         outline = outline.replace("\n", " ")
         outline = outline.replace(" ", " ")
         outline = outline.replace("²", "平方")
+        outline = outline.replace("。", "。\n")
         g.setOutline(outline)
         g.setSource(accountName)
     # close the page, select the first page and refresh the page.
@@ -637,7 +646,7 @@ def getOfficialAccount():
         login()
     finally:
         for i in websites:
-            logging.info(("正在获取", i, "的文章"))
+            logging.info(f"正在获取{i}的文章")
             GetOfficialAccount(i, posts, len(posts) - 1, len(posts) - 1)
         # close the browser
         logging.info("正在关闭浏览器")
@@ -649,8 +658,8 @@ def getOfficialAccount():
 
 def get():
     # run the function to get the information from the school website
-    getSchooljwc()
-    getschoolpe()
+    # getSchooljwc()
+    # getschoolpe()
     # run the function to get the information from the official account
     getOfficialAccount()
 
