@@ -9,6 +9,7 @@ def main():
     keywordsNotNeed = open("keywordsNotNeed.txt", 'r', encoding='utf-8').read().split('\n')
     snownlp = SnowNLP(text)
     sentences = snownlp.sentences
+    sentencesBest = []
     for sentence in sentences:
         for wordNotNeed in keywordsNotNeed:
             if wordNotNeed in sentence:
@@ -18,9 +19,11 @@ def main():
             continue
         for wordNeed in keywordsNeed:
             if wordNeed in sentence:
-                print(sentence)
+                sentencesBest.append(sentence)
                 break
+    return sentencesBest
 
 
 if __name__ == '__main__':
-    main()
+    sentence = main()
+    print(sentence)
