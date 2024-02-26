@@ -57,7 +57,7 @@ def run():
                 "outline": i.outline,
                 "url": i.url
             }
-            r.release(s, post, True)
+            r.release(s, post, s["isTest"])
             if i.url != "":
                 oldPosts.write(i.url + "\n")
             else:
