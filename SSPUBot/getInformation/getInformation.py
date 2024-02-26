@@ -119,7 +119,6 @@ class noScanQRCodeError(Exception):
     def __init__(self):
         super().__init__(self)
         self.errorinfo = "没有扫码"
-        releaseWechatAccountOverdueNotice()
 
     def __str__(self):
         return self.errorinfo
@@ -250,6 +249,7 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         writeafile[0].click()
     except IndexError:
         try:
+            logging.error("二维码未扫描，正在等待下一次运行")
             settingsNew = json.load(open("../data/settings/settings.json", "r", encoding="utf-8"))
             settingsNew["isLogin"] = False
             json.dump(settingsNew, open("../data/settings/settings.json", "w", encoding="utf-8"))
@@ -263,12 +263,14 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
             settingsNew = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
             settingsNew["isLogin"] = False
             json.dump(settingsNew, open("./data/settings/settings.json", "w", encoding="utf-8"))
+
             try:
                 if sys.argv[1] == "onDocker":
                     os.system("pkill -9 firefox")
                     os.system("pkill -9 firefox-bin")
             except IndexError:
                 pass
+        releaseWechatAccountOverdueNotice()
         exit(1)
     time.sleep(5)
     windows = driver.window_handles
