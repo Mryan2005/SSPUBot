@@ -60,26 +60,51 @@ def release(setting: dict, post: dict, isTest: bool = True):
         logging.info("Release end!")
     elif isTest == False:
         logging.info("现在是正式模式")
-        id = 20
-        data = {
-            "data": {
-                "type": "discussions",
-                "attributes": {
-                    "title": post["title"],
-                    "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
-                },
-                "relationships": {
-                    "tags": {
-                        "data": [
-                            {
-                                "type": "tags",
-                                "id": id
-                            }
-                        ]
+        if "通知公告" in post["title"] or "教学安排" in post["title"] or "考试补（缓）考安排" in post[
+            "title"] or "考试安排 " in post["title"]:
+            data = {
+                "data": {
+                    "type": "discussions",
+                    "attributes": {
+                        "title": post["title"],
+                        "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                    },
+                    "relationships": {
+                        "tags": {
+                            "data": [
+                                {
+                                    type: "tags",
+                                    id: "20"
+                                },
+                                {
+                                    type: "tags",
+                                    id: "23"
+                                }
+                            ]
+                        }
                     }
                 }
             }
-        }
+        else:
+            data = {
+                "data": {
+                    "type": "discussions",
+                    "attributes": {
+                        "title": post["title"],
+                        "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                    },
+                    "relationships": {
+                        "tags": {
+                            "data": [
+                                {
+                                    "type": "tags",
+                                    "id": "20"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         responses = session.post(setting["url"] + "/api/discussions", headers=head, json=data)
         if responses.status_code == 201:
             print("Release success!")

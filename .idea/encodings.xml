@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/SSPUBot/NLP/main.py" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/SSPUBot/NLP/test.txt" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/SSPUBot/data/settings/settings.json" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/releaseedPost.log" charset="GBK" />
-    <file url="PROJECT" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
