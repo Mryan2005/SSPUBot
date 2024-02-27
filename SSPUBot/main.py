@@ -45,10 +45,10 @@ def run():
                 }
                 res = r.release(s, post, True)
                 flag = 1
-            if i.url != "" and res == 1 and flag == 1:
-                oldPosts.write(i.url + "\n")
-            elif i.title != "" and res == 1 and flag == 1:
-                oldPosts.write(i.title + '\n')
+            if str(i.url) != "" and res == 1 and flag == 1:
+                oldPosts.write(str(i.url) + "\n")
+            elif str(i.title) != "" and res == 1 and flag == 1:
+                oldPosts.write(str(i.title) + '\n')
     except FileNotFoundError:
         oldPosts = open("./data/haveReleased.sspubot", "w", encoding="utf-8")
         for i in posts[:]:
@@ -58,10 +58,10 @@ def run():
                 "url": i.url
             }
             r.release(s, post, s["isTest"])
-            if i.url != "":
-                oldPosts.write(i.url + "\n")
-            else:
-                oldPosts.write(i.title + '\n')
+            if str(i.url) != "":
+                oldPosts.write(str(i.url) + "\n")
+            elif str(i, title):
+                oldPosts.write(str(i.title) + '\n')
         oldPosts.close()
 
 
