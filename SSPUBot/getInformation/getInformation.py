@@ -394,8 +394,8 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         outline = outline.replace("\n", " ")
         outline = outline.replace(" ", " ")
         outline = outline.replace("²", "平方")
-        outline = outline.replace("。", "。\n")
-        outline = outline.replace("！", "！\n")
+        for i in settings["theSymbolThatTriggersALineBreak"]:
+            outline = outline.replace(i, f"{i}\n")
         g.setOutline(outline)
         g.setSource(accountName)
     # close the page, select the first page and refresh the page.
