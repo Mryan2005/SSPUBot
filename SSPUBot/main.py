@@ -43,7 +43,7 @@ def run():
                     "outline": i.outline,
                     "url": i.url
                 }
-                res = r.release(s, post, True)
+                res = r.release(s, post, s["isTest"])
                 flag = 1
             if str(i.url) != "" and res == 1 and flag == 1:
                 oldPosts.write(str(i.url) + "\n")
