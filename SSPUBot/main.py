@@ -57,11 +57,11 @@ def run():
                 "outline": i.outline,
                 "url": i.url
             }
-            r.release(s, post, s["isTest"])
-            if str(i.url) != "":
-                oldPosts.write(str(i.url) + "\n")
-            elif str(i, title):
-                oldPosts.write(str(i.title) + '\n')
+            if r.release(s, post, s["isTest"]):
+                if str(i.url) != "":
+                    oldPosts.write(str(i.url) + "\n")
+                elif str(i, title):
+                    oldPosts.write(str(i.title) + '\n')
         oldPosts.close()
 
 

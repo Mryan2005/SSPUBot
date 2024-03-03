@@ -50,13 +50,13 @@ def release(setting: dict, post: dict, isTest: bool = True):
         if responses.status_code == 201:
             print("Release success!")
             logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-            res = 1
+            res = true
         else:
             print("Release failed!")
             print(responses.status_code)
             logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
             logging.error(str(responses.status_code) + " " + str(responses.content))
-            res = 0
+            res = false
         logging.info("Release end!")
     elif isTest == False:
         logging.info("现在是正式模式")
@@ -109,16 +109,16 @@ def release(setting: dict, post: dict, isTest: bool = True):
         if responses.status_code == 201:
             print("Release success!")
             logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-            res = 1
+            res = true
         else:
             print("Release failed!")
             print(responses.status_code)
             logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
             logging.error(str(responses.status_code) + " " + str(responses.content))
-            res = 0
+            res = false
         logging.info("Release end!")
     elif isTest is None:
-        res = 1
+        res = true
         pass
     return res
 
