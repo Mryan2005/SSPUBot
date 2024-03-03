@@ -73,12 +73,12 @@ def release(setting: dict, post: dict, isTest: bool = True):
                         "tags": {
                             "data": [
                                 {
-                                    type: "tags",
-                                    id: "20"
+                                    "type": "tags",
+                                    "id": "20"
                                 },
                                 {
-                                    type: "tags",
-                                    id: "23"
+                                    "type": "tags",
+                                    "id": "23"
                                 }
                             ]
                         }
