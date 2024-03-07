@@ -50,13 +50,13 @@ def release(setting: dict, post: dict, isTest: bool = True):
         if responses.status_code == 201:
             print("Release success!")
             logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-            res = 1
+            res = True
         else:
             print("Release failed!")
             print(responses.status_code)
             logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
             logging.error(str(responses.status_code) + " " + str(responses.content))
-            res = 0
+            res = false
         logging.info("Release end!")
     elif isTest == False:
         logging.info("现在是正式模式")
@@ -73,12 +73,36 @@ def release(setting: dict, post: dict, isTest: bool = True):
                         "tags": {
                             "data": [
                                 {
-                                    type: "tags",
-                                    id: "20"
+                                    "type": "tags",
+                                    "id": "20"
                                 },
                                 {
-                                    type: "tags",
-                                    id: "23"
+                                    "type": "tags",
+                                    "id": "23"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        elif "讲座" in post["title"]:
+            data = {
+                "data": {
+                    "type": "discussions",
+                    "attributes": {
+                        "title": post["title"],
+                        "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                    },
+                    "relationships": {
+                        "tags": {
+                            "data": [
+                                {
+                                    "type": "tags",
+                                    "id": "20"
+                                },
+                                {
+                                    "type": "tags",
+                                    "id": "22"
                                 }
                             ]
                         }
@@ -109,16 +133,16 @@ def release(setting: dict, post: dict, isTest: bool = True):
         if responses.status_code == 201:
             print("Release success!")
             logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-            res = 1
+            res = True
         else:
             print("Release failed!")
             print(responses.status_code)
             logging.error("Release" + post["title"] + " " + str(post["url"]) + " failed!")
             logging.error(str(responses.status_code) + " " + str(responses.content))
-            res = 0
+            res = false
         logging.info("Release end!")
     elif isTest is None:
-        res = 1
+        res = True
         pass
     return res
 
