@@ -50,7 +50,7 @@ def release(setting: dict, post: dict, isTest: bool = True):
         if responses.status_code == 201:
             print("Release success!")
             logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-            res = true
+            res = True
         else:
             print("Release failed!")
             print(responses.status_code)
@@ -133,7 +133,7 @@ def release(setting: dict, post: dict, isTest: bool = True):
         if responses.status_code == 201:
             print("Release success!")
             logging.info("Release" + post["title"] + " " + str(post["url"]) + " success!")
-            res = true
+            res = True
         else:
             print("Release failed!")
             print(responses.status_code)
@@ -142,7 +142,7 @@ def release(setting: dict, post: dict, isTest: bool = True):
             res = false
         logging.info("Release end!")
     elif isTest is None:
-        res = true
+        res = True
         pass
     return res
 
