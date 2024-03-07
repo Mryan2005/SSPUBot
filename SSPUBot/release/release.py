@@ -85,6 +85,30 @@ def release(setting: dict, post: dict, isTest: bool = True):
                     }
                 }
             }
+        elif "讲座" in post["title"]:
+            data = {
+                "data": {
+                    "type": "discussions",
+                    "attributes": {
+                        "title": post["title"],
+                        "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                    },
+                    "relationships": {
+                        "tags": {
+                            "data": [
+                                {
+                                    "type": "tags",
+                                    "id": "20"
+                                },
+                                {
+                                    "type": "tags",
+                                    "id": "22"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         else:
             data = {
                 "data": {
