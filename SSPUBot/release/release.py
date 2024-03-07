@@ -85,7 +85,7 @@ def release(setting: dict, post: dict, isTest: bool = True):
                     }
                 }
             }
-        elif "讲座" in post["title"]:
+        elif "讲座" in post["title"] or "志愿" in post["title"]:
             data = {
                 "data": {
                     "type": "discussions",
