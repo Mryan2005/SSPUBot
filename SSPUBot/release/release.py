@@ -11,6 +11,15 @@ class goto(Exception):
 
 def goto1():
     raise goto
+    
+def checkAndTagIt(tagsKeywords, theContectOfPost):
+    for i in tagsKeywords["information"]:
+        if i in theContectOfPost:
+            id = 22
+    for i in tagsKeywords["outsideClass"]:
+        if i in theContectOfPost:
+            id = 23
+    return id
 
 
 try:
