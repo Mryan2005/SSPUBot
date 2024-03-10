@@ -155,6 +155,10 @@ def MakeErrorAboutNoScanQRCode():
     raise noScanQRCodeError()
 
 
+def MakeErrorAboutTimeout():
+    raise TimeoutError("超时")
+
+
 posts = []
 
 
@@ -316,7 +320,11 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         logging.error("无法获取url，正在等待下一次运行")
         return 1
     logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
-    driver.get(url)
+    try:
+        driver.get(url)
+    except selenium.common.exceptions.TImeoutException:
+        logging.error("超时, 跳过")
+        return 1
     time.sleep(3)
     # get the information of the official account
     htmls = driver.page_source
