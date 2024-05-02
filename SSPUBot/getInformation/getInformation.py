@@ -516,8 +516,12 @@ def getSchooljwc():
                 flag = 0
                 break
     logging.info("获取教务处文件的概要成功，正在获取教务处文件")
+    oldPosts = open("../data/haveReleased.sspubot", "r+", encoding="utf-8")
+    oldPostList = oldPosts.readlines()
     for g in posts:
         url = g.url
+        if url in oldPostList or g.title in oldPostList:
+            continue
         try:
             driver.get(url)
             outline = driver.find_element(By.XPATH, "//div[@class=\"WordSection1\"]")
@@ -635,6 +639,8 @@ def getschoolpe():
     logging.info("获取体育部文件的概要成功，正在获取体育部文件")
     for g in posts[lastpart + 1:]:
         url = g.url
+        if url in oldPostList or g.title in oldPostList:
+            continue
         try:
             if "files/" in url:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
