@@ -4,3 +4,4 @@ selenium
 selenium-wire
 snownlp
 jieba
+blinker
