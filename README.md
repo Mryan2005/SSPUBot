@@ -90,4 +90,4 @@ python main.py
 ```
 
 ## Contact Me
-![Email](mailto:SSPUBot@mryan2005.top)
+[Email](mailto:SSPUBot@mryan2005.top)
