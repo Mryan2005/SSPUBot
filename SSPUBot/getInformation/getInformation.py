@@ -155,6 +155,10 @@ def MakeErrorAboutNoScanQRCode():
     raise noScanQRCodeError()
 
 
+def MakeErrorAboutTimeout():
+    raise TimeoutError("超时")
+
+
 posts = []
 
 
@@ -316,7 +320,11 @@ def GetOfficialAccount(accountName, posts, k, lastpart):
         logging.error("无法获取url，正在等待下一次运行")
         return 1
     logging.info("正在获取公众号的url成功, url为" + url + ", 正在获取公众号的文章")
-    driver.get(url)
+    try:
+        driver.get(url)
+    except selenium.common.exceptions.TImeoutException:
+        logging.error("超时, 跳过")
+        return 1
     time.sleep(3)
     # get the information of the official account
     htmls = driver.page_source
@@ -508,8 +516,12 @@ def getSchooljwc():
                 flag = 0
                 break
     logging.info("获取教务处文件的概要成功，正在获取教务处文件")
+    oldPosts = open("../data/haveReleased.sspubot", "r+", encoding="utf-8")
+    oldPostList = oldPosts.readlines()
     for g in posts:
         url = g.url
+        if url in oldPostList or g.title in oldPostList:
+            continue
         try:
             driver.get(url)
             outline = driver.find_element(By.XPATH, "//div[@class=\"WordSection1\"]")
@@ -627,6 +639,8 @@ def getschoolpe():
     logging.info("获取体育部文件的概要成功，正在获取体育部文件")
     for g in posts[lastpart + 1:]:
         url = g.url
+        if url in oldPostList or g.title in oldPostList:
+            continue
         try:
             if "files/" in url:
                 g.setOutline("由于网页不支持打开，请到该站点查看")
