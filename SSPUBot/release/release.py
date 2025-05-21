@@ -4,6 +4,24 @@ import logging
 
 import requests
 
+
+class goto(Exception):
+    pass
+
+
+def goto1():
+    raise goto
+    
+def checkAndTagIt(tagsKeywords, theContectOfPost):
+    for i in tagsKeywords["information"]:
+        if i in theContectOfPost:
+            id = 22
+    for i in tagsKeywords["outsideClass"]:
+        if i in theContectOfPost:
+            id = 23
+    return id
+
+
 try:
     s = json.load(open("./data/settings/settings.json", "r", encoding="utf-8"))
 except FileNotFoundError:
@@ -60,8 +78,60 @@ def release(setting: dict, post: dict, isTest: bool = True):
         logging.info("Release end!")
     elif isTest == False:
         logging.info("现在是正式模式")
-        if "通知公告" in post["title"] or "教学安排" in post["title"] or "考试补（缓）考安排" in post[
-            "title"] or "考试安排 " in post["title"]:
+        i = setting["tags"]
+        try:
+            for j in i["information"]:
+                if j in post["title"]:
+                    data = {
+                        "data": {
+                            "type": "discussions",
+                            "attributes": {
+                                "title": post["title"],
+                                "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                            },
+                            "relationships": {
+                                "tags": {
+                                    "data": [
+                                        {
+                                            "type": "tags",
+                                            "id": "20"
+                                        },
+                                        {
+                                            "type": "tags",
+                                            "id": "23"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                    goto1()
+            for j in i["outsideClass"]:
+                if j in post["title"]:
+                    data = {
+                        "data": {
+                            "type": "discussions",
+                            "attributes": {
+                                "title": post["title"],
+                                "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
+                            },
+                            "relationships": {
+                                "tags": {
+                                    "data": [
+                                        {
+                                            "type": "tags",
+                                            "id": "20"
+                                        },
+                                        {
+                                            "type": "tags",
+                                            "id": "22"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                    goto1()
             data = {
                 "data": {
                     "type": "discussions",
@@ -75,60 +145,14 @@ def release(setting: dict, post: dict, isTest: bool = True):
                                 {
                                     "type": "tags",
                                     "id": "20"
-                                },
-                                {
-                                    "type": "tags",
-                                    "id": "23"
                                 }
                             ]
                         }
                     }
                 }
             }
-        elif "讲座" in post["title"] or "志愿" in post["title"]:
-            data = {
-                "data": {
-                    "type": "discussions",
-                    "attributes": {
-                        "title": post["title"],
-                        "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
-                    },
-                    "relationships": {
-                        "tags": {
-                            "data": [
-                                {
-                                    "type": "tags",
-                                    "id": "20"
-                                },
-                                {
-                                    "type": "tags",
-                                    "id": "22"
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        else:
-            data = {
-                "data": {
-                    "type": "discussions",
-                    "attributes": {
-                        "title": post["title"],
-                        "content": post["outline"] + "  \n[ 前往官网 ](" + str(post["url"]) + ")"
-                    },
-                    "relationships": {
-                        "tags": {
-                            "data": [
-                                {
-                                    "type": "tags",
-                                    "id": "20"
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
+        except goto:
+            pass
         responses = session.post(setting["url"] + "/api/discussions", headers=head, json=data)
         if responses.status_code == 201:
             print("Release success!")
